@@ -11,13 +11,14 @@ public class EnemyManager : MonoBehaviour
     public float alarmedValue;
     [SerializeField] private float chasingValue;
     public bool alarmed;
+    private bool stop;
 
     void Start()
     {
         enemies = FindObjectsOfType<Enemy>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         foreach(Enemy enemy in enemies)
         {
@@ -29,7 +30,7 @@ public class EnemyManager : MonoBehaviour
                 }
                 else
                 {
-                    //enemy.Move();
+                    enemy.Move();
                 }
             }
 

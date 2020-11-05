@@ -11,10 +11,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float moveSpeed;
     public bool attacking;
     private bool ignoreCollider;
-    public Transform wayPoint1, wayPoint2;
     public Player player;
-    private Transform wayPointTarget;
-    private Transform target;
+    public Transform[] waypoints;
+    private int randomWaypoint;
+    private Vector3 target;
+    private float waitTime;
+    [SerializeField] private float startWaitTime;
+    [SerializeField] private float startWaitTimeCover;
 
     public bool playerVisible;
     public float detectionValue;
@@ -25,29 +28,37 @@ public class Enemy : MonoBehaviour
     public DetectionBar detectionBar;
     [SerializeField] private float detectionSpeed;
     private bool onLastSeenPos;
+    [SerializeField] private GameObject closestCover;
+    [SerializeField] private float coverRayDistance;
+    private GameObject tempClosestCover;
 
 
     private void Awake()
     {
-        wayPointTarget = wayPoint1;
+        randomWaypoint = UnityEngine.Random.Range(0, waypoints.Length);
     }
 
     private void Start()
     {
         player = FindObjectOfType<Player>();
-        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         enemyManager = FindObjectOfType<EnemyManager>();
         fov = FindObjectOfType<FieldOfView>();
+        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
     }
 
     private void Update()
     {
         DetectingPlayer();
+        if (target != Vector3.zero && Vector2.Distance(transform.position, target) > 0.75f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
+        }
     }
 
 
     public void Move()
     {
+        target = waypoints[randomWaypoint].position;
         if (player.behindCover)
         {
             Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
@@ -57,30 +68,41 @@ public class Enemy : MonoBehaviour
             Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
         }
 
-        if(Vector3.Distance(transform.position, wayPoint1.position) < 0.75f)
+        if (Vector3.Distance(transform.position, waypoints[randomWaypoint].position) < 0.80f)
         {
-            wayPointTarget = wayPoint2;
-            Flip();
+            if(waitTime <= 0)
+            {
+                randomWaypoint = UnityEngine.Random.Range(0, waypoints.Length);
+                waitTime = startWaitTime;
+                Flip();
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+            }
         }
-
-        if(Vector3.Distance(transform.position, wayPoint2.position) < 0.75f)
-        {
-            wayPointTarget = wayPoint1;
-            Flip();
-        }
-
-            transform.position = Vector2.MoveTowards(transform.position, wayPointTarget.position, moveSpeed * Time.deltaTime);     
     }
 
     public void Chasing()
     {
         Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
-        transform.position = Vector2.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, fov.lastSeenPos, moveSpeed * Time.deltaTime);
     }
 
     private void Flip()
     {
-        transform.Rotate(0, 180, 0);  
+        //if (transform.rotation == Quaternion.Euler(0, 180, 0) && transform.position.x < target.x)
+        //{
+        //transform.Rotate(0, 180, 0);
+        //}
+
+        //if (transform.rotation == Quaternion.Euler(0, 0, 0) && transform.position.x > target.x)
+        //{
+        //transform.Rotate(0, 180, 0);
+        //}
+
+        transform.Rotate(0, 180, 0);
+
     }
 
     private void DetectingPlayer()
@@ -99,42 +121,113 @@ public class Enemy : MonoBehaviour
                 detectionValue += detectionSpeed * Time.deltaTime;
             }
         }
-        //else if (detectionValue >= 0)
-        //{
-          //  detectionValue -= detectionSpeed * Time.deltaTime;
-        //}
 
         detectionBar.SetDetectionValue(detectionValue);
 
     }
 
-   public IEnumerator WaitBeforeInvestigating()
+    public IEnumerator WaitBeforeInvestigating()
     {
-        yield return new WaitForSeconds(0.5f);
+        target = Vector3.zero;
+        yield return new WaitForSeconds(0.2f);
         Investigating();
     }
 
     public void Investigating()
     {
-        if (Vector3.Distance(transform.position, fov.lastSeenPos) > 0.75f)
+        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
+
+        if (!onLastSeenPos && Vector2.Distance(transform.position, fov.lastSeenPos) > 0.75f)
         {
-            transform.position = Vector2.MoveTowards(transform.position, fov.lastSeenPos, moveSpeed * Time.deltaTime);
+            target = fov.lastSeenPos;
+            onLastSeenPos = false;
+        }
+        if(Vector2.Distance(transform.position, fov.lastSeenPos) <= 3f)
+        {
             onLastSeenPos = true;
         }
-        if(onLastSeenPos)
+        if (onLastSeenPos)
         {
-            GameObject closestCover;
             GameObject[] covers = GameObject.FindGameObjectsWithTag("Cover");
-            for(int i = 0; i > covers.Length; i++)
+            SortCovers(covers);
+            closestCover = null;
+
+            for (int i = 0; i < covers.Length; i++)
             {
-                
+                if (closestCover == null)
+                {
+                    if (transform.rotation == Quaternion.Euler(0, 0, 0) && transform.position.x > covers[i].transform.position.x)
+                    {
+                        closestCover = covers[i];
+                    }
+
+                    if (transform.rotation == Quaternion.Euler(0, 180, 0) && transform.position.x < covers[i].transform.position.x)
+                    {
+                        closestCover = covers[i];
+                    }
+                }
+            }
+            if(closestCover != null)
+            {
+                target = closestCover.transform.position;
+                GetPlayerOutOfCover(closestCover);
+            }
+        }
+        Debug.Log(closestCover);
+        onLastSeenPos = false;
+        DecreaseDetectionValue();
+
+    }
+
+    public GameObject[] SortCovers(GameObject[] unsortedCovers)
+    {
+        int min;
+        GameObject temp;
+
+        for(int i = 0; i < unsortedCovers.Length; i++)
+        {
+            min = i;
+            for(int j = i + 1; j < unsortedCovers.Length; j++)
+            {
+                if(Vector2.Distance(transform.position, unsortedCovers[j].transform.position) < Vector2.Distance(transform.position, unsortedCovers[min].transform.position))
+                {
+                    min = j;
+                }
             }
 
-            if (detectionValue > 0)
+            if(min != i)
             {
-                detectionValue -= detectionSpeed * Time.deltaTime;
+                temp = unsortedCovers[i];
+                unsortedCovers[i] = unsortedCovers[min];
+                unsortedCovers[min] = temp;
             }
+        }
+        return unsortedCovers;
+    }
+
+    private void DecreaseDetectionValue()
+    {
+        if (detectionValue > 0)
+        {
+            detectionValue -= detectionSpeed * Time.deltaTime;
         }
     }
 
+    private void GetPlayerOutOfCover(GameObject closestCover)
+    {
+        if (waitTime <= 0)
+        {
+            if (player.behindCover && Vector2.Distance(transform.position, closestCover.transform.position) < 3f)
+            {
+                player.behindCover = false;
+                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 0);
+            }
+            waitTime = startWaitTimeCover;
+        }
+        else
+        {
+            waitTime -= Time.deltaTime;
+        }
+    }
 }
+

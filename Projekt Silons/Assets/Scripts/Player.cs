@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
         //Going out of cover
         if(behindCover && Input.GetKeyDown(KeyCode.S))
         {
-            behindCover = !behindCover;
+            behindCover = false;
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
 
