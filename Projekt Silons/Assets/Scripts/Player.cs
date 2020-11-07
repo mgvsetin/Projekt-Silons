@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] float coverDistance;
     private Vector3 coverCheckDir;
     private float horInput;
+    private float verInput;
     private bool crouched = false;
     public bool behindCover;
 
@@ -37,9 +38,7 @@ public class Player : MonoBehaviour
     {
         //Assigning player direction
         horInput = Input.GetAxis("Horizontal");
-
-        //Checking if player is on the ground
-        grounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        verInput = Input.GetAxis("Vertical");
 
     }
 
@@ -48,7 +47,7 @@ public class Player : MonoBehaviour
         //Adding horizontal velocity for walking
         if (!behindCover)
         {
-            rb.velocity = new Vector2(horInput * speed * Time.deltaTime, rb.velocity.y);
+            rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
         }
 
         //Adding velocity for running 
@@ -56,7 +55,7 @@ public class Player : MonoBehaviour
         {
             if(speed < maxSpeed)
             {
-                rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, 0);
+                rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
             }
         }
 
@@ -77,12 +76,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        //Adding vertical velocity
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            rb.velocity = Vector2.up * jumpHeight * Time.deltaTime;
-        }
-
         //Going out of cover
         if(behindCover && Input.GetKeyDown(KeyCode.S))
         {
@@ -94,6 +87,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collider)
     {
+        //Going into cover
         if (collider.CompareTag("Cover"))
         {
             if (!behindCover && Input.GetKeyDown(KeyCode.W))
