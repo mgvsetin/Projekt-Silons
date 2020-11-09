@@ -15,14 +15,17 @@ public class FieldOfView : MonoBehaviour
     public float meshResolution;
     public MeshFilter viewMeshFilter;
     private Mesh viewMesh;
-    public Vector3 lastSeenPos;
+    public Transform lastSeenPos;
+    public GameObject lastSeenPosWaypointPrefab;
+    public  GameObject lastSeenPosWaypointClone;
+    public List<GameObject> lastSeenPosWaypoits;
 
     private void Start()
     {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-        enemy = FindObjectOfType<Enemy>();
+        enemy = gameObject.GetComponentInParent<Enemy>();
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
 
@@ -66,7 +69,10 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
-                    lastSeenPos = target.position;
+                    lastSeenPos = target;
+                    lastSeenPosWaypointClone = Instantiate(lastSeenPosWaypointPrefab, lastSeenPos.position, Quaternion.identity);
+                    lastSeenPosWaypoits.Add(lastSeenPosWaypointClone);
+                    
                 }
             }
         }

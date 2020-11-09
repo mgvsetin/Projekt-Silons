@@ -6,7 +6,7 @@ public class EnemyManager : MonoBehaviour
 {
     //Variables
 
-    public Enemy[] enemies;
+    public GameObject[] enemies;
     [SerializeField] private float investigatingValue;
     public float alarmedValue;
     [SerializeField] private float chasingValue;
@@ -15,14 +15,26 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        enemies = FindObjectsOfType<Enemy>();
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     void Update()
     {
-        foreach(Enemy enemy in enemies)
+        foreach(GameObject enemy in enemies)
         {
-            if(enemy.detectionValue < investigatingValue)
+            if(enemy.GetComponent<Enemy>().detectionValue < investigatingValue)
+           {
+                if (alarmed)
+                {
+                    //enemy.Move();
+                }
+                else
+                {
+                    enemy.GetComponent<Animator>().SetBool("isPatroling", true);
+                }
+            } 
+
+            if (enemy.GetComponent<Enemy>().detectionValue >= investigatingValue && enemy.GetComponent<Enemy>().detectionValue < alarmedValue)
             {
                 if (alarmed)
                 {
@@ -30,29 +42,21 @@ public class EnemyManager : MonoBehaviour
                 }
                 else
                 {
-                    enemy.Move();
+                    //StartCoroutine(enemy.GetComponent<Enemy>().WaitBeforeInvestigating());
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", true);
+
+
+                    
                 }
             }
 
-            if (enemy.detectionValue >= investigatingValue && enemy.detectionValue < alarmedValue)
-            {
-                if (alarmed)
-                {
-                    //enemy.Move();
-                }
-                else
-                {
-                    StartCoroutine(enemy.WaitBeforeInvestigating());
-                }
-            }
-
-            if(enemy.detectionValue >= alarmedValue && enemy.detectionValue < chasingValue)
+            if(enemy.GetComponent<Enemy>().detectionValue >= alarmedValue && enemy.GetComponent<Enemy>().detectionValue < chasingValue)
             {
                 //enemy.Move();
                 alarmed = true;
             }
 
-            if (enemy.detectionValue >= chasingValue)
+            if (enemy.GetComponent<Enemy>().detectionValue >= chasingValue)
             {
                 //enemy.Chasing();
             }

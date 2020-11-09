@@ -20,7 +20,7 @@ public class RoomSpawner : MonoBehaviour
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
         destroyer = GameObject.FindGameObjectWithTag("Destroyer");
         Invoke("Spawn", 0.1f);
-        Invoke("DeleteDestroyer", 0.2f);
+        Invoke("PostSpawnOperations", 0.2f);
     }
 
     private void Spawn()
@@ -57,9 +57,10 @@ public class RoomSpawner : MonoBehaviour
         }
     }
 
-    private void DeleteDestroyer()
+    private void PostSpawnOperations()
     {
         Destroy(destroyer);
+        AstarPath.active.Scan();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

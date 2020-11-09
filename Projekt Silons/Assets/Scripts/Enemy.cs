@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ public class Enemy : MonoBehaviour
     public Player player;
     public Transform[] waypoints;
     private int randomWaypoint;
-    private Vector3 target;
+    private Transform target;
     private float waitTime;
     [SerializeField] private float startWaitTime;
     [SerializeField] private float startWaitTimeCover;
@@ -27,10 +28,13 @@ public class Enemy : MonoBehaviour
     public bool newDetectionValueSet;
     public DetectionBar detectionBar;
     [SerializeField] private float detectionSpeed;
-    private bool onLastSeenPos;
+    [SerializeField] private bool onLastSeenPos;
     [SerializeField] private GameObject closestCover;
     [SerializeField] private float coverRayDistance;
     private GameObject tempClosestCover;
+
+    private AIDestinationSetter aiDestinationSetter;
+    private AIPath aiPath;
 
 
     private void Awake()
@@ -42,72 +46,20 @@ public class Enemy : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         enemyManager = FindObjectOfType<EnemyManager>();
-        fov = FindObjectOfType<FieldOfView>();
+        fov = gameObject.GetComponentInChildren<FieldOfView>();
         Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
+        aiDestinationSetter = gameObject.GetComponent<AIDestinationSetter>();
+        aiPath = gameObject.GetComponent<AIPath>();
     }
 
     private void Update()
     {
         DetectingPlayer();
-        if (target != Vector3.zero && Vector2.Distance(transform.position, target) > 0.75f)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
-        }
     }
 
-
-    public void Move()
-    {
-        target = waypoints[randomWaypoint].position;
-        if (player.behindCover)
-        {
-            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
-        }
-        else
-        {
-            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
-        }
-
-        if (Vector3.Distance(transform.position, waypoints[randomWaypoint].position) < 0.80f)
-        {
-            if(waitTime <= 0)
-            {
-                randomWaypoint = UnityEngine.Random.Range(0, waypoints.Length);
-                waitTime = startWaitTime;
-                Flip();
-            }
-            else
-            {
-                waitTime -= Time.deltaTime;
-            }
-        }
-    }
-
-    public void Chasing()
-    {
-        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
-        transform.position = Vector2.MoveTowards(transform.position, fov.lastSeenPos, moveSpeed * Time.deltaTime);
-    }
-
-    private void Flip()
-    {
-        //if (transform.rotation == Quaternion.Euler(0, 180, 0) && transform.position.x < target.x)
-        //{
-        //transform.Rotate(0, 180, 0);
-        //}
-
-        //if (transform.rotation == Quaternion.Euler(0, 0, 0) && transform.position.x > target.x)
-        //{
-        //transform.Rotate(0, 180, 0);
-        //}
-
-        transform.Rotate(0, 180, 0);
-
-    }
 
     private void DetectingPlayer()
     {
-
         if (playerVisible)
         {
             if (enemyManager.alarmed && !newDetectionValueSet && detectionValue < enemyManager.alarmedValue)
@@ -126,28 +78,11 @@ public class Enemy : MonoBehaviour
 
     }
 
-    public IEnumerator WaitBeforeInvestigating()
+    public void InvestigatingParTwo()
     {
-        target = Vector3.zero;
-        yield return new WaitForSeconds(0.2f);
-        Investigating();
-    }
-
-    public void Investigating()
-    {
-        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
-
-        if (!onLastSeenPos && Vector2.Distance(transform.position, fov.lastSeenPos) > 0.75f)
+        if (aiPath.remainingDistance <= 0.5f)
         {
-            target = fov.lastSeenPos;
-            onLastSeenPos = false;
-        }
-        if(Vector2.Distance(transform.position, fov.lastSeenPos) <= 3f)
-        {
-            onLastSeenPos = true;
-        }
-        if (onLastSeenPos)
-        {
+            Debug.Log("ABC");
             GameObject[] covers = GameObject.FindGameObjectsWithTag("Cover");
             SortCovers(covers);
             closestCover = null;
@@ -156,27 +91,20 @@ public class Enemy : MonoBehaviour
             {
                 if (closestCover == null)
                 {
-                    if (transform.rotation == Quaternion.Euler(0, 0, 0) && transform.position.x > covers[i].transform.position.x)
-                    {
-                        closestCover = covers[i];
-                    }
-
-                    if (transform.rotation == Quaternion.Euler(0, 180, 0) && transform.position.x < covers[i].transform.position.x)
-                    {
-                        closestCover = covers[i];
-                    }
+                    closestCover = covers[i];
                 }
             }
-            if(closestCover != null)
+            if (closestCover != null)
             {
-                target = closestCover.transform.position;
-                GetPlayerOutOfCover(closestCover);
+                aiDestinationSetter.target = closestCover.transform;
+                Debug.Log(aiDestinationSetter.target.name);
+                if (aiPath.reachedEndOfPath)
+                {
+                    closestCover = null;
+                }
             }
         }
-        Debug.Log(closestCover);
-        onLastSeenPos = false;
         DecreaseDetectionValue();
-
     }
 
     public GameObject[] SortCovers(GameObject[] unsortedCovers)
@@ -205,7 +133,7 @@ public class Enemy : MonoBehaviour
         return unsortedCovers;
     }
 
-    private void DecreaseDetectionValue()
+    public void DecreaseDetectionValue()
     {
         if (detectionValue > 0)
         {
@@ -229,5 +157,44 @@ public class Enemy : MonoBehaviour
             waitTime -= Time.deltaTime;
         }
     }
+
+    /* public void Move()
+    {
+        aiDestinationSetter.target = waypoints[randomWaypoint];
+        if (player.behindCover)
+        {
+            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
+        }
+        else
+        {
+            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
+        }
+
+        if (Vector3.Distance(transform.position, waypoints[randomWaypoint].position) < 0.80f)
+        {
+            if(waitTime <= 0)
+            {
+                randomWaypoint = UnityEngine.Random.Range(0, waypoints.Length);
+                waitTime = startWaitTime;
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+            }
+        }
+    } */
+
+    /* public IEnumerator WaitBeforeInvestigating()
+    {
+        aiDestinationSetter.target = null;
+        yield return new WaitForSeconds(0.2f);
+        InvestigatingPartOne();
+    }
+
+    public void InvestigatingPartOne()
+    {
+        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
+        aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
+    } */
 }
 
