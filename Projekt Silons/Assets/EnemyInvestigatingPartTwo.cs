@@ -35,7 +35,7 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
             if (closestCover != null)
             {
                 aiDestinationSetter.target = closestCover.transform;
-                if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1f)
+                if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1.5f)
                 {
                     closestCover = null;
                     animator.SetBool("isInvestigating2", false);
