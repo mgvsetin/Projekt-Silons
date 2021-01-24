@@ -121,6 +121,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &43576581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6840572480827019427, guid: 6cc657f0d82739f4e8c6e69c46321f12,
+    type: 3}
+  m_PrefabInstance: {fileID: 1506520443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &43576584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43576581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd2bfd5127fabb540b51ce051c86a0ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 1
 --- !u!1 &93854134
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,6 +769,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6840572481330690145, guid: 6cc657f0d82739f4e8c6e69c46321f12,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6840572481330690146, guid: 6cc657f0d82739f4e8c6e69c46321f12,
         type: 3}
       propertyPath: waypoints.Array.size
@@ -855,6 +879,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Basic Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6840572481330690207, guid: 6cc657f0d82739f4e8c6e69c46321f12,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 6840572481583627272, guid: 6cc657f0d82739f4e8c6e69c46321f12,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1190,6 +1219,28 @@ Transform:
   m_Father: {fileID: 93854135}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1982640469 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6840572481330690148, guid: 6cc657f0d82739f4e8c6e69c46321f12,
+    type: 3}
+  m_PrefabInstance: {fileID: 1506520443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &1982640480
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982640469}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &2002861039
 GameObject:
   m_ObjectHideFlags: 0

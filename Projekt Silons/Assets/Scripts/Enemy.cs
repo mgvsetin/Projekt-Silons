@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float coverRayDistance;
     private GameObject tempClosestCover;
 
-    private AIDestinationSetter aiDestinationSetter;
+    public AIDestinationSetter aiDestinationSetter;
     private AIPath aiPath;
 
 

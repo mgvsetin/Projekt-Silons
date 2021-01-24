@@ -47,7 +47,7 @@ public class FieldOfView : MonoBehaviour
     {
         if (!angleIsGlobal)
         {
-            angleInDegrees += transform.eulerAngles.y;
+            angleInDegrees += transform.eulerAngles.z;
         }
         return new Vector3(-Mathf.Cos(angleInDegrees * Mathf.Deg2Rad), -Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0);
     }
@@ -96,7 +96,7 @@ public class FieldOfView : MonoBehaviour
 
         for (int i = 0; i <= rayCount; i++)
         {
-            float angle = transform.eulerAngles.y - viewAngle /2 + rayAngleSize * i;
+            float angle = transform.eulerAngles.z - viewAngle /2 + rayAngleSize * i;
             Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * viewRadius, Color.red);
             ViewCastInfo newViewCast = ViewCast(angle);
             viewPoints.Add(newViewCast.point);
