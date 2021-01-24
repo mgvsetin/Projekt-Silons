@@ -24,7 +24,6 @@ public class EnemyInvestigatingPartOne : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Physics2D.IgnoreCollision(animator.GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
         aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
 
         if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1f)

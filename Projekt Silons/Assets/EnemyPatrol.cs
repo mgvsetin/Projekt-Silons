@@ -28,14 +28,6 @@ public class EnemyPatrol : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         aiDestinationSetter.target = waypoints.waypointTemplates[randomWaypoint].transform;
-        if (player.behindCover)
-        {
-            Physics2D.IgnoreCollision(animator.GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
-        }
-        else
-        {
-            Physics2D.IgnoreCollision(animator.GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
-        }
 
         if (Vector3.Distance(animator.transform.position, waypoints.waypointTemplates[randomWaypoint].transform.position) < 0.80f)
         {

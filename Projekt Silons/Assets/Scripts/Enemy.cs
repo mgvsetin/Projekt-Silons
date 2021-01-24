@@ -47,7 +47,6 @@ public class Enemy : MonoBehaviour
         player = FindObjectOfType<Player>();
         enemyManager = FindObjectOfType<EnemyManager>();
         fov = gameObject.GetComponentInChildren<FieldOfView>();
-        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
         aiDestinationSetter = gameObject.GetComponent<AIDestinationSetter>();
         aiPath = gameObject.GetComponent<AIPath>();
     }
