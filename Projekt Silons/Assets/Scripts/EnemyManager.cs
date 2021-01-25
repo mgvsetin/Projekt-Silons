@@ -42,11 +42,8 @@ public class EnemyManager : MonoBehaviour
                 }
                 else
                 {
-                    //StartCoroutine(enemy.GetComponent<Enemy>().WaitBeforeInvestigating());
-                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", true);
-
-
                     
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", true);
                 }
             }
 

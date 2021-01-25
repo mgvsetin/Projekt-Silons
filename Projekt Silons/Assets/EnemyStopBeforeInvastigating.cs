@@ -1,47 +1,52 @@
-﻿using Pathfinding;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
-public class EnemyInvestigatingPartOne : StateMachineBehaviour
+public class EnemyStopBeforeInvastigating : StateMachineBehaviour
 {
     //Variables
-    Player player;
-    bool ignoreCollider;
     AIDestinationSetter aiDestinationSetter;
-    FieldOfView fov;
     AIPath aiPath;
+    FieldOfView fov;
+    Enemy enemy;
     float waitTime;
-    public float startWaitTime = 2f;
+    float startWaitTime = 1f;
+    public ParticleSystem questionMarkParticle;
     public float moveSpeed;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = FindObjectOfType<Player>();
+        enemy = animator.GetComponent<Enemy>();
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-        fov =  animator.GetComponentInChildren<FieldOfView>();
-        aiPath = animator.GetComponent<AIPath>();
         waitTime = startWaitTime;
+        fov = animator.GetComponentInChildren<FieldOfView>();
+        aiPath = animator.GetComponent<AIPath>();
+        Instantiate(questionMarkParticle, enemy.transform.position, Quaternion.identity);
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        aiPath.maxSpeed = moveSpeed;
-        aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
-
-        if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1f)
+        if(waitTime <= 0)
         {
-            animator.SetBool("isInvestigating2", true);
+            animator.SetBool("continueInvestaigating", true);
+            aiPath.maxSpeed = moveSpeed;
+        }
+        else
+        {
+            aiPath.maxSpeed = 0;
+            waitTime -= Time.deltaTime;
         }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
