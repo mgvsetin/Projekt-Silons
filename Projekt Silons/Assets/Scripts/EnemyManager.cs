@@ -26,7 +26,7 @@ public class EnemyManager : MonoBehaviour
            {
                 if (alarmed)
                 {
-                    //enemy.Move();
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
                 }
                 else
                 {
@@ -38,7 +38,7 @@ public class EnemyManager : MonoBehaviour
             {
                 if (alarmed)
                 {
-                    //enemy.Move();
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
                 }
                 else
                 {
@@ -49,7 +49,7 @@ public class EnemyManager : MonoBehaviour
 
             if(enemy.GetComponent<Enemy>().detectionValue >= alarmedValue && enemy.GetComponent<Enemy>().detectionValue < chasingValue)
             {
-                //enemy.Move();
+                enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
                 alarmed = true;
             }
 
