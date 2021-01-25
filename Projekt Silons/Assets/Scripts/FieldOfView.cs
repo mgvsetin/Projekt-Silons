@@ -9,7 +9,6 @@ public class FieldOfView : MonoBehaviour
     public float viewAngle;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
-    public LayerMask groundMask;
     public List<Transform> visibleTargets = new List<Transform>();
     public Enemy enemy;
     public float meshResolution;
@@ -27,6 +26,7 @@ public class FieldOfView : MonoBehaviour
         viewMeshFilter.mesh = viewMesh;
         enemy = gameObject.GetComponentInParent<Enemy>();
         StartCoroutine("FindTargetsWithDelay", 0.2f);
+
     }
 
     private void LateUpdate()
@@ -72,7 +72,6 @@ public class FieldOfView : MonoBehaviour
                     lastSeenPos = target;
                     lastSeenPosWaypointClone = Instantiate(lastSeenPosWaypointPrefab, lastSeenPos.position, Quaternion.identity);
                     lastSeenPosWaypoits.Add(lastSeenPosWaypointClone);
-                    
                 }
             }
         }

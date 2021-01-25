@@ -10,6 +10,8 @@ public class DetectionBar : MonoBehaviour
     public Slider detectionSlider;
     public Gradient gradient;
     public Image fill;
+    private Vector3 openedUI = new Vector3(1, 1, 1);
+    private Vector3 closedUI = new Vector3(0, 0, 0);
 
     public void SetDetectionValue(float detectionValue)
     {
@@ -17,5 +19,14 @@ public class DetectionBar : MonoBehaviour
         detectionSlider.value = detectionValue;
 
         fill.color = gradient.Evaluate(detectionSlider.normalizedValue);
+    }
+
+    public void ShowDetectionBar()
+    {
+        transform.localScale = openedUI;
+    }
+    public void HideDetectionBar()
+    {
+        transform.localScale = closedUI;
     }
 }

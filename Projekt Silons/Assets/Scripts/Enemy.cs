@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour
     {
         if (playerVisible)
         {
+            //detectionBar.ShowDetectionBar();
             if (enemyManager.alarmed && !newDetectionValueSet && detectionValue < enemyManager.alarmedValue)
             {
                 detectionValue = enemyManager.alarmedValue;
@@ -71,6 +72,10 @@ public class Enemy : MonoBehaviour
             {
                 detectionValue += detectionSpeed * Time.deltaTime;
             }
+        }
+        else
+        {
+            //detectionBar.HideDetectionBar();
         }
 
         detectionBar.SetDetectionValue(detectionValue);
