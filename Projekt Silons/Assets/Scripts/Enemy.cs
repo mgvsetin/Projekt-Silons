@@ -162,43 +162,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /* public void Move()
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        aiDestinationSetter.target = waypoints[randomWaypoint];
-        if (player.behindCover)
+        if(collider.CompareTag("Player Particle"))
         {
-            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
+            Debug.Log("Particle Hit");
         }
-        else
-        {
-            Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = false);
-        }
-
-        if (Vector3.Distance(transform.position, waypoints[randomWaypoint].position) < 0.80f)
-        {
-            if(waitTime <= 0)
-            {
-                randomWaypoint = UnityEngine.Random.Range(0, waypoints.Length);
-                waitTime = startWaitTime;
-            }
-            else
-            {
-                waitTime -= Time.deltaTime;
-            }
-        }
-    } */
-
-    /* public IEnumerator WaitBeforeInvestigating()
-    {
-        aiDestinationSetter.target = null;
-        yield return new WaitForSeconds(0.2f);
-        InvestigatingPartOne();
+        
     }
-
-    public void InvestigatingPartOne()
-    {
-        Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), player.GetComponent<CapsuleCollider2D>(), ignoreCollider = true);
-        aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
-    } */
 }
 

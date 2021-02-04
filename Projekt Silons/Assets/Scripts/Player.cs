@@ -20,13 +20,11 @@ public class Player : MonoBehaviour
     private float verInput;
     private bool crouched = false;
     public bool behindCover;
-
-    public Transform groundCheck;
-    private bool grounded;
-    public float checkRadius;
-    public LayerMask whatIsGround;
+    private bool sprinting;
 
     public Animator anim;
+
+    public ParticleSystem walkingSoundParticle;
 
 
     private void Start()
@@ -48,10 +46,27 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Adding horizontal velocity for walking
+        //Adding velocity for walking
         if (!behindCover)
         {
             rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
+        }
+
+        //Walking Particle
+
+        if(rb.velocity.x >= 0.1f || rb.velocity.y >= 0.1f || rb.velocity.x <= -0.1f || rb.velocity.y <= -0.1f)
+        {
+            if (!crouched)
+            {
+                walkingSoundParticle.gameObject.SetActive(true);
+                walkingSoundParticle.startSize = 7f;
+                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 3f;
+            }
+        }
+
+        if(rb.velocity.x == 0 && rb.velocity.y == 0)
+        {
+            walkingSoundParticle.gameObject.SetActive(false);
         }
 
         //Adding velocity for running 
@@ -60,6 +75,8 @@ public class Player : MonoBehaviour
             if(speed < maxSpeed)
             {
                 rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
+                walkingSoundParticle.startSize = 12f;
+                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 4.5f;
             }
         }
 
@@ -71,6 +88,7 @@ public class Player : MonoBehaviour
                 speed = speed / 2;
                 crouched = true;
                 anim.SetBool("Crouched", true);
+                walkingSoundParticle.gameObject.SetActive(false);
             }
             else
             {
@@ -81,7 +99,7 @@ public class Player : MonoBehaviour
         }
 
         //Going out of cover
-        if(behindCover && Input.GetKeyDown(KeyCode.S))
+        if (behindCover && Input.GetKeyDown(KeyCode.X))
         {
             behindCover = false;
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
@@ -94,11 +112,11 @@ public class Player : MonoBehaviour
         //Going into cover
         if (collider.CompareTag("Cover"))
         {
-            if (!behindCover && Input.GetKeyDown(KeyCode.W))
+            if (!behindCover && Input.GetKeyDown(KeyCode.C))
             {
-                behindCover = !behindCover;
+                behindCover = true;
                 rb.velocity = Vector2.zero;
-                transform.position = new Vector3(collider.transform.position.x, collider.transform.position.y, 6);
+                transform.position = new Vector3(collider.transform.position.x, collider.transform.position.y, 0);
             }
         }
     }

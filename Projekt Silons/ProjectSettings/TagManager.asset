@@ -10,6 +10,7 @@ TagManager:
   - Rooms
   - Destroyer
   - Last Seen Posotion Waypoint
+  - Player Particle
   layers:
   - Default
   - TransparentFX
