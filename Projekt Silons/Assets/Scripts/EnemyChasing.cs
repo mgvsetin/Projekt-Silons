@@ -1,47 +1,58 @@
-﻿using Pathfinding;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
-public class EnemyInvestigatingPartOne : StateMachineBehaviour
+public class EnemyChasing : StateMachineBehaviour
 {
     //Variables
+    public float chasingRadius;
+    bool inRadius;
+    public LayerMask whatIsPlayer;
+    public AIDestinationSetter aiDestinationSetter;
     Player player;
-    bool ignoreCollider;
-    AIDestinationSetter aiDestinationSetter;
+    EnemyManager enemyManager;
+    Enemy enemy;
     FieldOfView fov;
-    AIPath aiPath;
-    float waitTime;
-    public float startWaitTime = 2f;
-    public float moveSpeed;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = FindObjectOfType<Player>();
+        fov = animator.GetComponentInChildren<FieldOfView>();
+        enemy = animator.GetComponent<Enemy>();
+        animator.SetBool("isAlarmed", false);
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-        fov =  animator.GetComponentInChildren<FieldOfView>();
-        aiPath = animator.GetComponent<AIPath>();
-        waitTime = startWaitTime;
+        player = FindObjectOfType<Player>();
+        enemyManager = FindObjectOfType<EnemyManager>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        aiPath.maxSpeed = moveSpeed;
-        aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
+        inRadius = Physics2D.OverlapCircle(animator.transform.position, chasingRadius, whatIsPlayer);
 
-        if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1f)
+        if (Vector2.Distance(animator.transform.position, player.transform.position) <= chasingRadius)
         {
-            animator.SetBool("isInvestigating2", true);
+            aiDestinationSetter.target = player.transform;
+            Debug.Log("In");
         }
+        else
+        {
+            enemy.detectionValue = 0f;
+            enemy.heardSound = false;
+
+            enemyManager.chasing = false;
+            animator.SetBool("isChasing", false);
+            Debug.Log("Out");
+        }
+
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

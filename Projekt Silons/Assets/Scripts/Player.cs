@@ -15,12 +15,10 @@ public class Player : MonoBehaviour
     [SerializeField] float maxSpeed;
     [SerializeField] float jumpHeight;
     [SerializeField] float coverDistance;
-    private Vector3 coverCheckDir;
     private float horInput;
     private float verInput;
     private bool crouched = false;
     public bool behindCover;
-    private bool sprinting;
 
     public Animator anim;
 
@@ -38,6 +36,8 @@ public class Player : MonoBehaviour
         horInput = Input.GetAxis("Horizontal");
         verInput = Input.GetAxis("Vertical");
 
+
+        //Looking with Mouse
         var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle + 180, Vector3.forward);
@@ -112,11 +112,37 @@ public class Player : MonoBehaviour
         //Going into cover
         if (collider.CompareTag("Cover"))
         {
-            if (!behindCover && Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                behindCover = true;
-                rb.velocity = Vector2.zero;
-                transform.position = new Vector3(collider.transform.position.x, collider.transform.position.y, 0);
+                if (behindCover)
+                {
+                    behindCover = false;
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y - 10, 0);
+                    }
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y + 10, 0);
+                    }
+                    if (Input.GetKeyDown(KeyCode.W))
+                    {
+                        transform.position = new Vector3(transform.position.x + 10, transform.position.y, 0);
+                    }
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        transform.position = new Vector3(transform.position.x - 10, transform.position.y, 0);
+                    }
+
+                    transform.GetComponent<CircleCollider2D>().enabled = true;
+                }
+                else
+                {
+                    behindCover = true;
+                    transform.GetComponent<CircleCollider2D>().enabled = false;
+                    rb.velocity = Vector2.zero;
+                    transform.position = new Vector3(collider.transform.position.x, collider.transform.position.y, 0);
+                }
             }
         }
     }

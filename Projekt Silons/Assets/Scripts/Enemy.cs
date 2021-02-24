@@ -36,6 +36,12 @@ public class Enemy : MonoBehaviour
     public AIDestinationSetter aiDestinationSetter;
     private AIPath aiPath;
 
+    public bool heardSound;
+    public Transform lastHeardPos;
+    public GameObject lastHeardWaypointPrefab;
+    private GameObject lastHeardPosWaypointClone;
+    [HideInInspector] public List<GameObject> lastHeardPosWaypoits;
+
 
     private void Awake()
     {
@@ -61,7 +67,6 @@ public class Enemy : MonoBehaviour
     {
         if (playerVisible)
         {
-            //detectionBar.ShowDetectionBar();
             if (enemyManager.alarmed && !newDetectionValueSet && detectionValue < enemyManager.alarmedValue)
             {
                 detectionValue = enemyManager.alarmedValue;
@@ -73,42 +78,9 @@ public class Enemy : MonoBehaviour
                 detectionValue += detectionSpeed * Time.deltaTime;
             }
         }
-        else
-        {
-            //detectionBar.HideDetectionBar();
-        }
 
         detectionBar.SetDetectionValue(detectionValue);
 
-    }
-
-    public void InvestigatingParTwo()
-    {
-        if (aiPath.remainingDistance <= 0.5f)
-        {
-            Debug.Log("ABC");
-            GameObject[] covers = GameObject.FindGameObjectsWithTag("Cover");
-            SortCovers(covers);
-            closestCover = null;
-
-            for (int i = 0; i < covers.Length; i++)
-            {
-                if (closestCover == null)
-                {
-                    closestCover = covers[i];
-                }
-            }
-            if (closestCover != null)
-            {
-                aiDestinationSetter.target = closestCover.transform;
-                Debug.Log(aiDestinationSetter.target.name);
-                if (aiPath.reachedEndOfPath)
-                {
-                    closestCover = null;
-                }
-            }
-        }
-        DecreaseDetectionValue();
     }
 
     public GameObject[] SortCovers(GameObject[] unsortedCovers)
@@ -166,9 +138,22 @@ public class Enemy : MonoBehaviour
     {
         if(collider.CompareTag("Player Particle"))
         {
-            Debug.Log("Particle Hit");
+            lastHeardPos = player.transform;
+            lastHeardPosWaypointClone = Instantiate(lastHeardWaypointPrefab, lastHeardPos.position, Quaternion.identity) ;
+            lastHeardPosWaypoits.Add(lastHeardPosWaypointClone);
+
+            if(detectionValue < 7)
+            {
+                detectionValue += 1.1f;
+            }
+            heardSound = true;
         }
         
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 9f);
     }
 }
 

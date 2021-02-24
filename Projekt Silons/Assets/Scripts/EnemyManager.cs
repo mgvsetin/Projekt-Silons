@@ -11,7 +11,7 @@ public class EnemyManager : MonoBehaviour
     public float alarmedValue;
     [SerializeField] private float chasingValue;
     public bool alarmed;
-    private bool stop;
+    public bool chasing;
 
     void Start()
     {
@@ -24,9 +24,16 @@ public class EnemyManager : MonoBehaviour
         {
             if(enemy.GetComponent<Enemy>().detectionValue < investigatingValue)
            {
-                if (alarmed)
+                if (alarmed && !chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
+                }
+                else if (chasing)
+                {
+                    enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
                 }
                 else
                 {
@@ -36,9 +43,16 @@ public class EnemyManager : MonoBehaviour
 
             if (enemy.GetComponent<Enemy>().detectionValue >= investigatingValue && enemy.GetComponent<Enemy>().detectionValue < alarmedValue)
             {
-                if (alarmed)
+                if (alarmed && !chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
+                }
+                else if (chasing)
+                {
+                    enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
                 }
                 else
                 {
@@ -49,13 +63,28 @@ public class EnemyManager : MonoBehaviour
 
             if(enemy.GetComponent<Enemy>().detectionValue >= alarmedValue && enemy.GetComponent<Enemy>().detectionValue < chasingValue)
             {
-                enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
-                alarmed = true;
+                if (chasing)
+                {
+                    enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
+                    enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
+                }
+                else
+                {
+                    enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
+                    alarmed = true;
+                }
+
             }
 
             if (enemy.GetComponent<Enemy>().detectionValue >= chasingValue)
             {
-                //enemy.Chasing();
+                enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
+                enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
+                enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
+                chasing = true;
             }
             
         }

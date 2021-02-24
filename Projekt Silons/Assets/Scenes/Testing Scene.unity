@@ -6233,7 +6233,7 @@ PrefabInstance:
     - target: {fileID: 3255248273700486505, guid: e6224442a1d405342aafedf4b9deaa2a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.52
+      value: -10.27
       objectReference: {fileID: 0}
     - target: {fileID: 3255248273700486505, guid: e6224442a1d405342aafedf4b9deaa2a,
         type: 3}
@@ -6312,7 +6312,7 @@ PrefabInstance:
     - target: {fileID: 1925194265544692369, guid: 21447f591bcf04343995bec7aef78edd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -15.178982
+      value: -15.928982
       objectReference: {fileID: 0}
     - target: {fileID: 1925194265544692369, guid: 21447f591bcf04343995bec7aef78edd,
         type: 3}
@@ -6397,7 +6397,7 @@ PrefabInstance:
     - target: {fileID: 1925194267606366890, guid: 21447f591bcf04343995bec7aef78edd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -15.178982
+      value: -15.928982
       objectReference: {fileID: 0}
     - target: {fileID: 1925194267606366890, guid: 21447f591bcf04343995bec7aef78edd,
         type: 3}
@@ -7592,6 +7592,75 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &899386962063333534
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384255754092607627, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240243428279578407, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
+      propertyPath: m_Name
+      value: Last Heard Position Waypoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4b840cfff69347f43b42b5c3825f0cea, type: 3}
 --- !u!1 &906827686199271513
 GameObject:
   m_ObjectHideFlags: 0
@@ -10873,6 +10942,12 @@ PrefabInstance:
       propertyPath: waypoints.Array.data[5]
       value: 
       objectReference: {fileID: 1795629765}
+    - target: {fileID: 2116168303214381540, guid: 1a46d9ca906b56b48838f64151c756e8,
+        type: 3}
+      propertyPath: lastHeardWaypointPrefab
+      value: 
+      objectReference: {fileID: 8240243428279578407, guid: 4b840cfff69347f43b42b5c3825f0cea,
+        type: 3}
     - target: {fileID: 2116168303214381541, guid: 1a46d9ca906b56b48838f64151c756e8,
         type: 3}
       propertyPath: m_LocalPosition.x

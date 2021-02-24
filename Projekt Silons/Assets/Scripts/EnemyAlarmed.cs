@@ -1,50 +1,61 @@
-﻿using Pathfinding;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
-public class EnemyInvestigatingPartTwo : StateMachineBehaviour
+public class EnemyAlarmed : StateMachineBehaviour
 {
     //Variables
     GameObject closestCover;
+    int randomCover;
+    float waitTime;
+    float startWaitTime = 0.2f;
     AIDestinationSetter aiDestinationSetter;
-    AIPath aiPath;
-
+    GameObject[] covers;
+    Enemy enemy;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        enemy = animator.GetComponent<Enemy>();
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-        aiPath = animator.GetComponent<AIPath>();
+        covers = GameObject.FindGameObjectsWithTag("Cover");
+        randomCover = UnityEngine.Random.Range(0, covers.Length);
+        waitTime = startWaitTime;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-            GameObject[] covers = GameObject.FindGameObjectsWithTag("Cover");
-            SortCovers(covers);
-            closestCover = null;
+        covers = GameObject.FindGameObjectsWithTag("Cover");
 
-            for (int i = 0; i < covers.Length; i++)
+        if (enemy.heardSound)
+        {
+            animator.SetBool("isInvestigating1", true);
+        }
+        else
+        {
+            aiDestinationSetter.target = covers[randomCover].transform;
+        }
+       
+
+        for (int i = 0; i < covers.Length; i++)
+        {
+
+            if (Vector3.Distance(animator.transform.position, covers[randomCover].transform.position) < 2f)
             {
-                if (closestCover == null)
+                if (waitTime <= 0)
                 {
-                    closestCover = covers[i];
+                    randomCover = UnityEngine.Random.Range(0, covers.Length);
+                    waitTime = startWaitTime;
+                }
+                else
+                {
+                    waitTime -= Time.deltaTime;
                 }
             }
-            if (closestCover != null)
-            {
-                aiDestinationSetter.target = closestCover.transform;
-                if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1.5f)
-                {
-                    closestCover = null;
-                    animator.SetBool("isInvestigating2", false);
-                    animator.SetBool("isInvestigating1", false);
-                    Debug.Log("Done");
-                }
-            }
+        }
 
-        animator.GetComponent<Enemy>().DecreaseDetectionValue();
 
         GameObject[] SortCovers(GameObject[] unsortedCovers)
         {
@@ -74,10 +85,10 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
