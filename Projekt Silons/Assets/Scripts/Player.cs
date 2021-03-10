@@ -36,50 +36,6 @@ public class Player : MonoBehaviour
         horInput = Input.GetAxis("Horizontal");
         verInput = Input.GetAxis("Vertical");
 
-
-        //Looking with Mouse
-        var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle + 180, Vector3.forward);
-
-    }
-
-    void FixedUpdate()
-    {
-        //Adding velocity for walking
-        if (!behindCover)
-        {
-            rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
-        }
-
-        //Walking Particle
-
-        if(rb.velocity.x >= 0.1f || rb.velocity.y >= 0.1f || rb.velocity.x <= -0.1f || rb.velocity.y <= -0.1f)
-        {
-            if (!crouched)
-            {
-                walkingSoundParticle.gameObject.SetActive(true);
-                walkingSoundParticle.startSize = 7f;
-                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 3f;
-            }
-        }
-
-        if(rb.velocity.x == 0 && rb.velocity.y == 0)
-        {
-            walkingSoundParticle.gameObject.SetActive(false);
-        }
-
-        //Adding velocity for running 
-        if (!behindCover && Input.GetKey(KeyCode.LeftShift))
-        {
-            if(speed < maxSpeed)
-            {
-                rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
-                walkingSoundParticle.startSize = 12f;
-                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 4.5f;
-            }
-        }
-
         //Adding velocty for crouching and crouch toggle
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -98,11 +54,48 @@ public class Player : MonoBehaviour
             }
         }
 
-        //Going out of cover
-        if (behindCover && Input.GetKeyDown(KeyCode.X))
+        //Walking Particle
+
+        if (rb.velocity.x >= 0.1f || rb.velocity.y >= 0.1f || rb.velocity.x <= -0.1f || rb.velocity.y <= -0.1f)
         {
-            behindCover = false;
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            if (!crouched)
+            {
+                walkingSoundParticle.gameObject.SetActive(true);
+                walkingSoundParticle.startSize = 7f;
+                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 3f;
+            }
+        }
+
+        if (rb.velocity.x == 0 && rb.velocity.y == 0)
+        {
+            walkingSoundParticle.gameObject.SetActive(false);
+        }
+
+    }
+
+    void FixedUpdate()
+    {
+
+        //Looking with Mouse
+        var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle + 180, Vector3.forward);
+
+        //Adding velocity for walking
+        if (!behindCover)
+        {
+            rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
+        }
+
+        //Adding velocity for running 
+        if (!behindCover && Input.GetKey(KeyCode.LeftShift))
+        {
+            if(speed < maxSpeed)
+            {
+                rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
+                walkingSoundParticle.startSize = 12f;
+                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 4.5f;
+            }
         }
 
     }

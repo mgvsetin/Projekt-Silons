@@ -35,7 +35,7 @@ public class EnemyAlarmed : StateMachineBehaviour
         }
         else
         {
-            aiDestinationSetter.target = covers[randomCover].transform;
+            SetTarget();
         }
        
 
@@ -82,6 +82,11 @@ public class EnemyAlarmed : StateMachineBehaviour
             }
             return unsortedCovers;
         }
+    }
+
+    public void SetTarget()
+    {
+        aiDestinationSetter.target = covers[randomCover].transform;
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

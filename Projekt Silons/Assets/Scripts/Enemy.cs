@@ -42,6 +42,9 @@ public class Enemy : MonoBehaviour
     private GameObject lastHeardPosWaypointClone;
     [HideInInspector] public List<GameObject> lastHeardPosWaypoits;
 
+    public bool alarmed;
+    public bool chasing;
+
 
     private void Awake()
     {
@@ -151,9 +154,12 @@ public class Enemy : MonoBehaviour
         
     }
 
-    private void OnDrawGizmos()
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        Gizmos.DrawWireSphere(transform.position, 9f);
+        if (collision.transform.CompareTag("Enemy"))
+        {
+            Physics2D.IgnoreCollision(collision.collider, gameObject.GetComponent<CircleCollider2D>());
+        }
     }
 }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyPatrol : StateMachineBehaviour
 {
     //Variables
-    WaypointTemplates waypoints;
+     WaypointTemplates waypoints;
      int randomWaypoint;
      Player player;
      AIDestinationSetter aiDestinationSetter;
@@ -22,12 +22,14 @@ public class EnemyPatrol : StateMachineBehaviour
         randomWaypoint = UnityEngine.Random.Range(0, waypoints.waypointTemplates.Length);
         player = FindObjectOfType<Player>();
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
+
+        animator.GetComponent<AudioSource>().Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        aiDestinationSetter.target = waypoints.waypointTemplates[randomWaypoint].transform;
+        SetTarget();
 
         if (Vector3.Distance(animator.transform.position, waypoints.waypointTemplates[randomWaypoint].transform.position) < 0.80f)
         {
@@ -41,6 +43,11 @@ public class EnemyPatrol : StateMachineBehaviour
                 waitTime -= Time.deltaTime;
             }
         }
+    }
+
+    public void SetTarget()
+    {
+        aiDestinationSetter.target = waypoints.waypointTemplates[randomWaypoint].transform;
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

@@ -12,6 +12,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float chasingValue;
     public bool alarmed;
     public bool chasing;
+    public Enemy enemyScript;
 
     void Start()
     {
@@ -22,13 +23,15 @@ public class EnemyManager : MonoBehaviour
     {
         foreach(GameObject enemy in enemies)
         {
-            if(enemy.GetComponent<Enemy>().detectionValue < investigatingValue)
+            enemyScript = enemy.GetComponent<Enemy>();
+
+            if(enemyScript.detectionValue < investigatingValue)
            {
-                if (alarmed && !chasing)
+                if (enemyScript.alarmed && !enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
                 }
-                else if (chasing)
+                else if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
@@ -43,11 +46,11 @@ public class EnemyManager : MonoBehaviour
 
             if (enemy.GetComponent<Enemy>().detectionValue >= investigatingValue && enemy.GetComponent<Enemy>().detectionValue < alarmedValue)
             {
-                if (alarmed && !chasing)
+                if (enemyScript.alarmed && !enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
                 }
-                else if (chasing)
+                else if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
@@ -63,7 +66,7 @@ public class EnemyManager : MonoBehaviour
 
             if(enemy.GetComponent<Enemy>().detectionValue >= alarmedValue && enemy.GetComponent<Enemy>().detectionValue < chasingValue)
             {
-                if (chasing)
+                if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
@@ -73,7 +76,7 @@ public class EnemyManager : MonoBehaviour
                 else
                 {
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", true);
-                    alarmed = true;
+                    enemyScript.alarmed = true;
                 }
 
             }
@@ -84,7 +87,7 @@ public class EnemyManager : MonoBehaviour
                 enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                 enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
                 enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
-                chasing = true;
+                enemyScript.chasing = true;
             }
             
         }

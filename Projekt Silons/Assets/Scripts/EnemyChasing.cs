@@ -41,7 +41,7 @@ public class EnemyChasing : StateMachineBehaviour
             enemy.detectionValue = 0f;
             enemy.heardSound = false;
 
-            enemyManager.chasing = false;
+            enemyManager.enemyScript.chasing = false;
             animator.SetBool("isChasing", false);
             Debug.Log("Out");
         }
