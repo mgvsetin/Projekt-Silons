@@ -17,8 +17,10 @@ public class Player : MonoBehaviour
     [SerializeField] float coverDistance;
     private float horInput;
     private float verInput;
-    private bool crouched = false;
+    [SerializeField] private bool crouched;
     public bool behindCover;
+    private bool nearCover;
+    private Transform coverImIn;
 
     public Animator anim;
 
@@ -71,6 +73,45 @@ public class Player : MonoBehaviour
             walkingSoundParticle.gameObject.SetActive(false);
         }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (nearCover)
+            {
+                if (behindCover)
+                {
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y - 1, 0);
+                    }
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y + 1, 0);
+                    }
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        transform.position = new Vector3(transform.position.x + 1.5f, transform.position.y, 0);
+                    }
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        transform.position = new Vector3(transform.position.x - 1.5f, transform.position.y, 0);
+                    }
+
+                    behindCover = false;
+                    transform.GetComponent<CircleCollider2D>().enabled = true;
+                    gameObject.GetComponent<MeshRenderer>().enabled = true;
+
+                }
+                else
+                {
+                    behindCover = true;
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    transform.GetComponent<CircleCollider2D>().enabled = false;
+                    rb.velocity = Vector2.zero;
+                    transform.position = new Vector3(coverImIn.position.x, coverImIn.position.y, 0f);
+                }
+            }
+        }
+
     }
 
     void FixedUpdate()
@@ -105,38 +146,16 @@ public class Player : MonoBehaviour
         //Going into cover
         if (collider.CompareTag("Cover"))
         {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                if (behindCover)
-                {
-                    behindCover = false;
-                    if (Input.GetKeyDown(KeyCode.A))
-                    {
-                        transform.position = new Vector3(transform.position.x, transform.position.y - 10, 0);
-                    }
-                    if (Input.GetKeyDown(KeyCode.D))
-                    {
-                        transform.position = new Vector3(transform.position.x, transform.position.y + 10, 0);
-                    }
-                    if (Input.GetKeyDown(KeyCode.W))
-                    {
-                        transform.position = new Vector3(transform.position.x + 10, transform.position.y, 0);
-                    }
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        transform.position = new Vector3(transform.position.x - 10, transform.position.y, 0);
-                    }
+            nearCover = true;
+            coverImIn = collider.transform;
+        }
+    }
 
-                    transform.GetComponent<CircleCollider2D>().enabled = true;
-                }
-                else
-                {
-                    behindCover = true;
-                    transform.GetComponent<CircleCollider2D>().enabled = false;
-                    rb.velocity = Vector2.zero;
-                    transform.position = new Vector3(collider.transform.position.x, collider.transform.position.y, 0);
-                }
-            }
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Cover"))
+        {
+            nearCover = false;
         }
     }
 
