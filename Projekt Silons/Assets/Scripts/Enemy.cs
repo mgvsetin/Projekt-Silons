@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
 {
     //Variables
 
-    [SerializeField] private float moveSpeed;
+    public float moveSpeed;
     public bool attacking;
     private bool ignoreCollider;
     public Player player;
@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
 
     public bool alarmed;
     public bool chasing;
+    [HideInInspector] public Animator animator;
 
 
     private void Awake()
@@ -58,6 +59,7 @@ public class Enemy : MonoBehaviour
         fov = gameObject.GetComponentInChildren<FieldOfView>();
         aiDestinationSetter = gameObject.GetComponent<AIDestinationSetter>();
         aiPath = gameObject.GetComponent<AIPath>();
+        animator = gameObject.GetComponent<Animator>();
     }
 
     private void Update()
@@ -70,9 +72,9 @@ public class Enemy : MonoBehaviour
     {
         if (playerVisible)
         {
-            if (enemyManager.alarmed && !newDetectionValueSet && detectionValue < enemyManager.alarmedValue)
+            if (alarmed && !newDetectionValueSet && detectionValue < enemyManager.alarmedValue)
             {
-                detectionValue = enemyManager.alarmedValue;
+                detectionValue = enemyManager.alarmedValue + 1f;
                 newDetectionValueSet = true;
             }
 
@@ -82,34 +84,16 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        detectionBar.SetDetectionValue(detectionValue);
-
-    }
-
-    public GameObject[] SortCovers(GameObject[] unsortedCovers)
-    {
-        int min;
-        GameObject temp;
-
-        for(int i = 0; i < unsortedCovers.Length; i++)
+        if (heardSound)
         {
-            min = i;
-            for(int j = i + 1; j < unsortedCovers.Length; j++)
+            if (alarmed && detectionValue < enemyManager.alarmedValue)
             {
-                if(Vector2.Distance(transform.position, unsortedCovers[j].transform.position) < Vector2.Distance(transform.position, unsortedCovers[min].transform.position))
-                {
-                    min = j;
-                }
-            }
-
-            if(min != i)
-            {
-                temp = unsortedCovers[i];
-                unsortedCovers[i] = unsortedCovers[min];
-                unsortedCovers[min] = temp;
+                detectionValue = enemyManager.alarmedValue + 1f;
             }
         }
-        return unsortedCovers;
+
+        detectionBar.SetDetectionValue(detectionValue);
+
     }
 
     public void DecreaseDetectionValue()
@@ -145,7 +129,7 @@ public class Enemy : MonoBehaviour
             lastHeardPosWaypointClone = Instantiate(lastHeardWaypointPrefab, lastHeardPos.position, Quaternion.identity) ;
             lastHeardPosWaypoits.Add(lastHeardPosWaypointClone);
 
-            if(detectionValue < 7)
+            if(detectionValue < enemyManager.chasingValue)
             {
                 detectionValue += 1.1f;
             }

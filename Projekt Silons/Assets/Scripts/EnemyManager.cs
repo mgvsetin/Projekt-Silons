@@ -9,7 +9,7 @@ public class EnemyManager : MonoBehaviour
     public GameObject[] enemies;
     [SerializeField] private float investigatingValue;
     public float alarmedValue;
-    [SerializeField] private float chasingValue;
+    public float chasingValue;
     public bool alarmed;
     public bool chasing;
     public Enemy enemyScript;
@@ -34,6 +34,7 @@ public class EnemyManager : MonoBehaviour
                 else if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isPatroling", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
@@ -53,6 +54,7 @@ public class EnemyManager : MonoBehaviour
                 else if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isPatroling", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
@@ -69,6 +71,7 @@ public class EnemyManager : MonoBehaviour
                 if (enemyScript.chasing)
                 {
                     enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                    enemy.GetComponent<Animator>().SetBool("isPatroling", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                     enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
                     enemy.GetComponent<Animator>().SetBool("isAlarmed", false);
@@ -84,6 +87,8 @@ public class EnemyManager : MonoBehaviour
             if (enemy.GetComponent<Enemy>().detectionValue >= chasingValue)
             {
                 enemy.GetComponent<Animator>().SetBool("isChasing", true);
+                enemy.GetComponent<Animator>().SetBool("isPatroling", false);
+                enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                 enemy.GetComponent<Animator>().SetBool("isInvestigating1", false);
                 enemy.GetComponent<Animator>().SetBool("isInvestigating2", false);
                 enemy.GetComponent<Animator>().SetBool("isAlarmed", false);

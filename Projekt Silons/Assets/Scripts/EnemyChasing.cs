@@ -7,43 +7,52 @@ public class EnemyChasing : StateMachineBehaviour
 {
     //Variables
     public float chasingRadius;
-    bool inRadius;
-    public LayerMask whatIsPlayer;
     public AIDestinationSetter aiDestinationSetter;
-    Player player;
+    GameObject player;
     EnemyManager enemyManager;
     Enemy enemy;
-    FieldOfView fov;
+    AIPath aIPath;
+    AudioManager audioManager;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        fov = animator.GetComponentInChildren<FieldOfView>();
         enemy = animator.GetComponent<Enemy>();
         animator.SetBool("isAlarmed", false);
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-        player = FindObjectOfType<Player>();
+        player = GameObject.FindGameObjectWithTag("Player");
         enemyManager = FindObjectOfType<EnemyManager>();
+        aIPath = animator.GetComponent<AIPath>();
+        audioManager = FindObjectOfType<AudioManager>();
+
+        audioManager.StopEnemySound("What was that");
+        audioManager.StopEnemySound("Somewhere");
+        audioManager.EnemySoundPlay("He's here");
+
+        aiDestinationSetter.target = player.transform;
+        aIPath.maxSpeed = enemy.moveSpeed;
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        inRadius = Physics2D.OverlapCircle(animator.transform.position, chasingRadius, whatIsPlayer);
+        aiDestinationSetter.target = player.transform;
 
-        if (Vector2.Distance(animator.transform.position, player.transform.position) <= chasingRadius)
-        {
-            aiDestinationSetter.target = player.transform;
-            Debug.Log("In");
-        }
-        else
-        {
-            enemy.detectionValue = 0f;
+        if (Vector2.Distance(animator.transform.position, player.transform.position) >= chasingRadius)
+         {
             enemy.heardSound = false;
 
-            enemyManager.enemyScript.chasing = false;
-            animator.SetBool("isChasing", false);
-            Debug.Log("Out");
+            enemy.DecreaseDetectionValue();
+            if(enemy.detectionValue <= 0f)
+            {
+                enemy.chasing = false;
+                animator.SetBool("isChasing", false);
+            }
+         }
+        else
+        {
+            enemy.detectionValue = enemyManager.chasingValue + 2f;
         }
 
     }

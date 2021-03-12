@@ -11,6 +11,7 @@ TagManager:
   - Destroyer
   - Last Seen Posotion Waypoint
   - Player Particle
+  - Test Object
   layers:
   - Default
   - TransparentFX

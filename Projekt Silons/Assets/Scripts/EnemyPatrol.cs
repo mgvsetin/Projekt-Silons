@@ -13,17 +13,35 @@ public class EnemyPatrol : StateMachineBehaviour
      bool ignoreCollider;
      float waitTime;
      float startWaitTime = 0.2f;
+    GameObject[] roomWaypoints;
+
+    public AudioManager audioManager;
 
 
     //OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        waypoints = GameObject.Find("Waypoint Templates B Room").GetComponent<WaypointTemplates>();
-        randomWaypoint = UnityEngine.Random.Range(0, waypoints.waypointTemplates.Length);
+        waypoints = FindObjectOfType<WaypointTemplates>();
+        string roomName = animator.transform.parent.name;
+
+        switch (roomName)
+        {
+            case "B Room":
+                roomWaypoints = waypoints.waypointsBRoom;
+                break;
+
+            case "L Room":
+                roomWaypoints = waypoints.waypointsLRoom;
+                break;
+        }
+
+
+        randomWaypoint = UnityEngine.Random.Range(0, roomWaypoints.Length);
         player = FindObjectOfType<Player>();
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-
-        animator.GetComponent<AudioSource>().Play();
+        audioManager = FindObjectOfType<AudioManager>();
+        
+        audioManager.EnemySoundPlay("Footsteps");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -31,11 +49,11 @@ public class EnemyPatrol : StateMachineBehaviour
     {
         SetTarget();
 
-        if (Vector3.Distance(animator.transform.position, waypoints.waypointTemplates[randomWaypoint].transform.position) < 0.80f)
+        if (Vector3.Distance(animator.transform.position, roomWaypoints[randomWaypoint].transform.position) < 0.80f)
         {
             if (waitTime <= 0)
             {
-                randomWaypoint = UnityEngine.Random.Range(0, waypoints.waypointTemplates.Length);
+                randomWaypoint = UnityEngine.Random.Range(0, roomWaypoints.Length);
                 waitTime = startWaitTime;
             }
             else
@@ -47,7 +65,7 @@ public class EnemyPatrol : StateMachineBehaviour
 
     public void SetTarget()
     {
-        aiDestinationSetter.target = waypoints.waypointTemplates[randomWaypoint].transform;
+        aiDestinationSetter.target = roomWaypoints[randomWaypoint].transform;
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

@@ -14,6 +14,8 @@ public class EnemyAlarmed : StateMachineBehaviour
     GameObject[] covers;
     Enemy enemy;
 
+    public AudioManager audioManager;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -22,6 +24,10 @@ public class EnemyAlarmed : StateMachineBehaviour
         covers = GameObject.FindGameObjectsWithTag("Cover");
         randomCover = UnityEngine.Random.Range(0, covers.Length);
         waitTime = startWaitTime;
+        audioManager = FindObjectOfType<AudioManager>();
+
+        audioManager.EnemySoundPlay("Footsteps");
+        audioManager.EnemySoundPlay("Somewhere");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -30,6 +36,11 @@ public class EnemyAlarmed : StateMachineBehaviour
         covers = GameObject.FindGameObjectsWithTag("Cover");
 
         if (enemy.heardSound)
+        {
+            animator.SetBool("isInvestigating1", true);
+        }
+
+        if (enemy.playerVisible)
         {
             animator.SetBool("isInvestigating1", true);
         }
@@ -47,6 +58,7 @@ public class EnemyAlarmed : StateMachineBehaviour
                 if (waitTime <= 0)
                 {
                     randomCover = UnityEngine.Random.Range(0, covers.Length);
+                    //audioManager.EnemySoundPlay("Somewhere");
                     waitTime = startWaitTime;
                 }
                 else
@@ -54,6 +66,10 @@ public class EnemyAlarmed : StateMachineBehaviour
                     waitTime -= Time.deltaTime;
                 }
             }
+        }
+        if(enemy.playerVisible == false)
+        {
+            animator.GetComponent<Enemy>().DecreaseDetectionValue();
         }
 
 
@@ -87,6 +103,7 @@ public class EnemyAlarmed : StateMachineBehaviour
     public void SetTarget()
     {
         aiDestinationSetter.target = covers[randomCover].transform;
+
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
