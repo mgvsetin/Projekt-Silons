@@ -43,8 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2367c023fe5ebbf4fb6e6f8b523610af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chasingRadius: 12
   enemies: []
   investigatingValue: 1
   alarmedValue: 5
   chasingValue: 9
   alarmed: 0
+  chasing: 0
+  enemyScript: {fileID: 0}

@@ -6,13 +6,14 @@ using Pathfinding;
 public class EnemyChasing : StateMachineBehaviour
 {
     //Variables
-    public float chasingRadius;
+
     public AIDestinationSetter aiDestinationSetter;
     GameObject player;
     EnemyManager enemyManager;
     Enemy enemy;
     AIPath aIPath;
-    AudioManager audioManager;
+    AudioSource audioToPlay;
+    GameObject[] enemies;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -23,11 +24,11 @@ public class EnemyChasing : StateMachineBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         enemyManager = FindObjectOfType<EnemyManager>();
         aIPath = animator.GetComponent<AIPath>();
-        audioManager = FindObjectOfType<AudioManager>();
 
-        enemy.StopEnemySound("What was that");
-        enemy.StopEnemySound("Somewhere");
-        enemy.EnemySoundPlay("He's here");
+        audioToPlay = enemy.enemyAudioSources[0];
+        audioToPlay.Play();
+        audioToPlay = enemy.enemyAudioSources[3];
+        audioToPlay.Play();
 
         aiDestinationSetter.target = player.transform;
         aIPath.maxSpeed = enemy.moveSpeed;
@@ -39,7 +40,7 @@ public class EnemyChasing : StateMachineBehaviour
     {
         aiDestinationSetter.target = player.transform;
 
-        if (Vector2.Distance(animator.transform.position, player.transform.position) >= chasingRadius)
+        if (Vector2.Distance(animator.transform.position, player.transform.position) >= enemyManager.chasingRadius)
          {
             enemy.heardSound = false;
 
@@ -53,6 +54,35 @@ public class EnemyChasing : StateMachineBehaviour
         else
         {
             enemy.detectionValue = enemyManager.chasingValue + 2f;
+        }
+
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            if (Vector2.Distance(animator.transform.position, enemy.transform.position) <= FindObjectOfType<EnemyManager>().chasingRadius)
+            {
+                if(Vector2.Distance(enemy.transform.position, player.transform.position) <= enemyManager.chasingRadius)
+                {
+                    enemy.GetComponent<Enemy>().chasing = true;
+                    enemy.GetComponent<Enemy>().detectionValue = enemyManager.chasingValue + 2f;
+                }
+                else
+                {
+                    enemy.GetComponent<Enemy>().heardSound = false;
+
+                    enemy.GetComponent<Enemy>().DecreaseDetectionValue();
+                    if (enemy.GetComponent<Enemy>().detectionValue <= 0f)
+                    {
+                        enemy.GetComponent<Enemy>().chasing = false;
+                        animator.SetBool("isChasing", false);
+                    }
+                }
+
+            }
+            else
+            {
+                enemy.GetComponent<Enemy>().DecreaseDetectionValue();
+            }
         }
 
     }

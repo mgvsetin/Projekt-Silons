@@ -15,8 +15,9 @@ public class EnemyAlarmed : StateMachineBehaviour
     Enemy enemy;
     string roomName;
     CoverTemplates coverTemplates;
+    public GameObject[] enemies;
 
-    public AudioManager audioManager;
+    public AudioSource audioToPlay;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -27,15 +28,16 @@ public class EnemyAlarmed : StateMachineBehaviour
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
         randomCover = UnityEngine.Random.Range(0, covers.Length);
         waitTime = startWaitTime;
-        audioManager = FindObjectOfType<AudioManager>();
         coverTemplates = animator.gameObject.GetComponent<CoverTemplates>();
 
         //Setting which covers are in room where enemy starts
         covers = coverTemplates.startingRoomCovers;
 
         //Playing Audio
-        enemy.EnemySoundPlay("Footsteps");
-        enemy.EnemySoundPlay("Somewhere");
+        audioToPlay = enemy.enemyAudioSources[2];
+        audioToPlay.Play();
+        audioToPlay = enemy.enemyAudioSources[0];
+        audioToPlay.Play();
 
     }
 
@@ -61,6 +63,17 @@ public class EnemyAlarmed : StateMachineBehaviour
         {
             covers = enemy.crossedRoom.GetComponent<CoverTemplates>().currentRoomCovers;
         }
+
+        //Making Enemies in radius alarmed as well
+
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject enemy in enemies)
+        {
+            if(Vector2.Distance(animator.transform.position, enemy.transform.position) <= FindObjectOfType<EnemyManager>().chasingRadius)
+            {
+                enemy.GetComponent<Enemy>().alarmed = true;
+            }
+        } 
        
 
         for (int i = 0; i < covers.Length; i++)
@@ -71,7 +84,6 @@ public class EnemyAlarmed : StateMachineBehaviour
                 if (waitTime <= 0)
                 {
                     randomCover = UnityEngine.Random.Range(0, covers.Length);
-                    //audioManager.EnemySoundPlay("Somewhere");
                     waitTime = startWaitTime;
                 }
                 else

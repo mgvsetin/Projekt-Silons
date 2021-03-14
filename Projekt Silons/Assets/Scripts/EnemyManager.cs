@@ -6,6 +6,7 @@ public class EnemyManager : MonoBehaviour
 {
     //Variables
 
+    public float chasingRadius;
     public GameObject[] enemies;
     [SerializeField] private float investigatingValue;
     public float alarmedValue;

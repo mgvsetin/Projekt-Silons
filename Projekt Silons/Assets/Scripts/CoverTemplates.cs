@@ -6,9 +6,4 @@ public class CoverTemplates : MonoBehaviour
 {
     public GameObject[] startingRoomCovers;
     public GameObject[] currentRoomCovers;
-
-    private void Start()
-    {
-        currentRoomCovers = startingRoomCovers;
-    }
 }
