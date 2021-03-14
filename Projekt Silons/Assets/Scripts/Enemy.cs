@@ -46,6 +46,13 @@ public class Enemy : MonoBehaviour
     public bool chasing;
     [HideInInspector] public Animator animator;
 
+    private AudioManager audioManager;
+    public EnemySounds[] enemySounds;
+    public List<AudioSource> enemyAudioSources;
+
+    public bool crossedRooms;
+    public GameObject crossedRoom;
+
 
     private void Awake()
     {
@@ -60,6 +67,8 @@ public class Enemy : MonoBehaviour
         aiDestinationSetter = gameObject.GetComponent<AIDestinationSetter>();
         aiPath = gameObject.GetComponent<AIPath>();
         animator = gameObject.GetComponent<Animator>();
+        audioManager = FindObjectOfType<AudioManager>();
+        enemySounds = audioManager.enemySounds;
     }
 
     private void Update()
@@ -135,6 +144,12 @@ public class Enemy : MonoBehaviour
             }
             heardSound = true;
         }
+
+        if (collider.CompareTag("Rooms"))
+        {
+            crossedRooms = true;
+            crossedRoom = collider.gameObject;
+        }
         
     }
 
@@ -144,6 +159,40 @@ public class Enemy : MonoBehaviour
         {
             Physics2D.IgnoreCollision(collision.collider, gameObject.GetComponent<CircleCollider2D>());
         }
+    }
+
+    public void EnemySoundPlay(string name)
+    {
+        foreach(AudioSource audio in enemyAudioSources)
+        {
+            if(audio.clip.name == name)
+            {
+                if (!PauseMenu.isPaused)
+                {
+                    audio.Play();
+                }
+                else
+                {
+                    audio.Pause();
+                }
+            }
+        }
+
+       /* EnemySounds es = Array.Find(enemySounds, enemysound => enemysound.name == name);
+        if (!PauseMenu.isPaused)
+        {
+            es.source.Play();
+        }
+        else
+        {
+            es.source.Pause();
+        } */
+    }
+
+    public void StopEnemySound(string name)
+    {
+        EnemySounds es = Array.Find(enemySounds, enemysound => enemysound.name == name);
+        es.source.Stop();
     }
 }
 

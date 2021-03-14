@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Audio;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
@@ -8,10 +9,14 @@ public class AudioManager : MonoBehaviour
     public EnemySounds[] enemySounds;
     public GameObject[] enemies;
 
+    RoomTemplates room;
+    private bool enemySoundsAdded;
+
     // Start is called before the first frame update
     void Awake()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        room = FindObjectOfType<RoomTemplates>();
 
         foreach (Sound sound in sounds)
         {
@@ -24,12 +29,12 @@ public class AudioManager : MonoBehaviour
             sound.source.pitch = sound.pitch;
         }
 
-        foreach(EnemySounds enemySound in enemySounds)
+      /*  foreach(EnemySounds enemySound in enemySounds)
         {
             foreach (GameObject enemy in enemies)
             {
                 enemySound.source = enemy.AddComponent<AudioSource>();
-
+                //enemy.GetComponent<Enemy>().enemyAudioSources.Add(enemySound.source);
 
                 enemySound.source.clip = enemySound.clip;
 
@@ -44,7 +49,7 @@ public class AudioManager : MonoBehaviour
                 enemySound.source.minDistance = enemySound.minDistance;
                 enemySound.source.maxDistance = enemySound.maxDistance;
             }
-        }
+        } */
     }
 
     private void Start()
@@ -54,7 +59,37 @@ public class AudioManager : MonoBehaviour
 
     public void Update()
     {
-        foreach(Sound sound in sounds)
+      /*  enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        if(room.exitSpawned && !enemySoundsAdded)
+        {
+            foreach (EnemySounds enemySound in enemySounds)
+            {
+                foreach (GameObject enemy in enemies)
+                {
+                    enemySound.source = enemy.AddComponent<AudioSource>();
+                    //enemy.GetComponent<Enemy>().enemyAudioSources.Add(enemySound.source);
+
+
+                    enemySound.source.clip = enemySound.clip;
+
+                    enemySound.source.loop = enemySound.loop;
+                    enemySound.source.playOnAwake = enemySound.playOnAwake;
+
+                    enemySound.source.volume = enemySound.volume;
+                    enemySound.source.pitch = enemySound.pitch;
+
+                    enemySound.source.spatialBlend = enemySound.spatialBlend;
+                    enemySound.source.rolloffMode = enemySound.rolloffMode;
+                    enemySound.source.minDistance = enemySound.minDistance;
+                    enemySound.source.maxDistance = enemySound.maxDistance;
+                }
+            }
+
+            enemySoundsAdded = true;
+        } */
+
+        foreach (Sound sound in sounds)
         {
             if (PauseMenu.isPaused == true)
             {
@@ -66,7 +101,7 @@ public class AudioManager : MonoBehaviour
             }
         }
 
-        foreach (EnemySounds enemySound in enemySounds)
+       /* foreach (EnemySounds enemySound in enemySounds)
         {
             if (PauseMenu.isPaused == true)
             {
@@ -76,7 +111,7 @@ public class AudioManager : MonoBehaviour
             {
                 enemySound.source.UnPause();
             }
-        }
+        } */
     }
 
 
@@ -86,22 +121,5 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
-    public void EnemySoundPlay(string name)
-    {
-        EnemySounds es = Array.Find(enemySounds, enemysound => enemysound.name == name);
-        if (!PauseMenu.isPaused)
-        {
-            es.source.Play();
-        }
-        else
-        {
-            es.source.Pause();
-        }
-    }
-
-    public void StopEnemySound(string name)
-    {
-        EnemySounds es = Array.Find(enemySounds, enemysound => enemysound.name == name);
-        es.source.Stop();
-    }
+   
 }

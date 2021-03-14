@@ -6,7 +6,7 @@ public class Destroyer : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(collider.tag != "Player")
+        if(collider.tag != "Player" || collider.tag != "Player Particle")
         {
             Destroy(collider.gameObject);
         }

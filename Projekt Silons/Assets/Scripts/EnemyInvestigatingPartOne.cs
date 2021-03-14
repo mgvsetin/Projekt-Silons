@@ -15,6 +15,7 @@ public class EnemyInvestigatingPartOne : StateMachineBehaviour
     float waitTime;
     public float startWaitTime = 2f;
     public float moveSpeed;
+    private AudioSource audioToPlay;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -26,6 +27,9 @@ public class EnemyInvestigatingPartOne : StateMachineBehaviour
         aiPath = animator.GetComponent<AIPath>();
         waitTime = startWaitTime;
         enemy = animator.GetComponent<Enemy>();
+
+        audioToPlay = enemy.enemyAudioSources[0];
+        audioToPlay.Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

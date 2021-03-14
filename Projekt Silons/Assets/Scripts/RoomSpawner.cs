@@ -15,7 +15,7 @@ public class RoomSpawner : MonoBehaviour
     private bool spawned = false;
     public GameObject destroyer;
 
-    private void Start()
+    private void Awake()
     {
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
         destroyer = GameObject.FindGameObjectWithTag("Destroyer");
@@ -57,7 +57,7 @@ public class RoomSpawner : MonoBehaviour
         }
     }
 
-    private void PostSpawnOperations()
+    public void PostSpawnOperations()
     {
         Destroy(destroyer);
         AstarPath.active.Scan();

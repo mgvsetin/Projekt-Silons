@@ -9,6 +9,8 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
     GameObject closestCover;
     AIDestinationSetter aiDestinationSetter;
     AIPath aiPath;
+    private AudioSource audioToPlay;
+    private Enemy enemy;
 
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -16,8 +18,12 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
     {
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
         aiPath = animator.GetComponent<AIPath>();
+        enemy = animator.GetComponent<Enemy>();
         animator.GetComponent<Enemy>().heardSound = false;
         animator.SetBool("continueInvestaigating", false);
+
+        audioToPlay = enemy.enemyAudioSources[0];
+        audioToPlay.Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

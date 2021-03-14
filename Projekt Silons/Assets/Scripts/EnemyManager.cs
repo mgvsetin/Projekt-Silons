@@ -16,12 +16,14 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
     }
 
     void Update()
     {
-        foreach(GameObject enemy in enemies)
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in enemies)
         {
             enemyScript = enemy.GetComponent<Enemy>();
 

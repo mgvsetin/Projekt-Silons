@@ -14,6 +14,7 @@ public class EnemyStopBeforeInvastigating : StateMachineBehaviour
     float startWaitTime = 1f;
     public ParticleSystem questionMarkParticle;
     public AudioManager audioManager;
+    private AudioSource audioToPlay;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -26,7 +27,11 @@ public class EnemyStopBeforeInvastigating : StateMachineBehaviour
         Instantiate(questionMarkParticle, enemy.transform.position, Quaternion.identity);
         audioManager = FindObjectOfType<AudioManager>();
 
-        audioManager.EnemySoundPlay("What was that");
+
+        audioToPlay = enemy.enemyAudioSources[0];
+        audioToPlay.Play();
+        audioToPlay = enemy.enemyAudioSources[1];
+        audioToPlay.Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

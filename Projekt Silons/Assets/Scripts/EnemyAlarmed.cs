@@ -11,29 +11,37 @@ public class EnemyAlarmed : StateMachineBehaviour
     float waitTime;
     float startWaitTime = 0.2f;
     AIDestinationSetter aiDestinationSetter;
-    GameObject[] covers;
+    public GameObject[] covers;
     Enemy enemy;
+    string roomName;
+    CoverTemplates coverTemplates;
 
     public AudioManager audioManager;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
+        //Setting Variables
         enemy = animator.GetComponent<Enemy>();
         aiDestinationSetter = animator.GetComponent<AIDestinationSetter>();
-        covers = GameObject.FindGameObjectsWithTag("Cover");
         randomCover = UnityEngine.Random.Range(0, covers.Length);
         waitTime = startWaitTime;
         audioManager = FindObjectOfType<AudioManager>();
+        coverTemplates = animator.gameObject.GetComponent<CoverTemplates>();
 
-        audioManager.EnemySoundPlay("Footsteps");
-        audioManager.EnemySoundPlay("Somewhere");
+        //Setting which covers are in room where enemy starts
+        covers = coverTemplates.startingRoomCovers;
+
+        //Playing Audio
+        enemy.EnemySoundPlay("Footsteps");
+        enemy.EnemySoundPlay("Somewhere");
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        covers = GameObject.FindGameObjectsWithTag("Cover");
 
         if (enemy.heardSound)
         {
@@ -47,6 +55,11 @@ public class EnemyAlarmed : StateMachineBehaviour
         else
         {
             SetTarget();
+        }
+
+        if (enemy.crossedRooms)
+        {
+            covers = enemy.crossedRoom.GetComponent<CoverTemplates>().currentRoomCovers;
         }
        
 

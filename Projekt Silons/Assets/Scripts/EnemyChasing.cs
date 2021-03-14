@@ -25,9 +25,9 @@ public class EnemyChasing : StateMachineBehaviour
         aIPath = animator.GetComponent<AIPath>();
         audioManager = FindObjectOfType<AudioManager>();
 
-        audioManager.StopEnemySound("What was that");
-        audioManager.StopEnemySound("Somewhere");
-        audioManager.EnemySoundPlay("He's here");
+        enemy.StopEnemySound("What was that");
+        enemy.StopEnemySound("Somewhere");
+        enemy.EnemySoundPlay("He's here");
 
         aiDestinationSetter.target = player.transform;
         aIPath.maxSpeed = enemy.moveSpeed;
