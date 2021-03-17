@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class AudioManager : MonoBehaviour
     public GameObject[] enemies;
 
     RoomTemplates room;
-    private bool enemySoundsAdded;
+    private bool startSoundsPlaying = false;
+
+    public AudioSource currentAudio;
 
     // Start is called before the first frame update
     void Awake()
@@ -54,40 +57,29 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        Play("Backround Theme");
+        if(room != null)
+        {
+            if (room.exitSpawned)
+            {
+                Play("Backround Theme");
+                startSoundsPlaying = true;
+            }
+        }
+
     }
 
     public void Update()
     {
-      /*  enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        if(room.exitSpawned && !enemySoundsAdded)
+        if(room != null)
         {
-            foreach (EnemySounds enemySound in enemySounds)
+            if (room.exitSpawned && !startSoundsPlaying)
             {
-                foreach (GameObject enemy in enemies)
-                {
-                    enemySound.source = enemy.AddComponent<AudioSource>();
-                    //enemy.GetComponent<Enemy>().enemyAudioSources.Add(enemySound.source);
-
-
-                    enemySound.source.clip = enemySound.clip;
-
-                    enemySound.source.loop = enemySound.loop;
-                    enemySound.source.playOnAwake = enemySound.playOnAwake;
-
-                    enemySound.source.volume = enemySound.volume;
-                    enemySound.source.pitch = enemySound.pitch;
-
-                    enemySound.source.spatialBlend = enemySound.spatialBlend;
-                    enemySound.source.rolloffMode = enemySound.rolloffMode;
-                    enemySound.source.minDistance = enemySound.minDistance;
-                    enemySound.source.maxDistance = enemySound.maxDistance;
-                }
+                Play("Backround Theme");
+                startSoundsPlaying = true;
             }
+        }
 
-            enemySoundsAdded = true;
-        } */
 
         foreach (Sound sound in sounds)
         {
@@ -100,18 +92,6 @@ public class AudioManager : MonoBehaviour
                 sound.source.UnPause();
             }
         }
-
-       /* foreach (EnemySounds enemySound in enemySounds)
-        {
-            if (PauseMenu.isPaused == true)
-            {
-                enemySound.source.Pause();
-            }
-            else
-            {
-                enemySound.source.UnPause();
-            }
-        } */
     }
 
 
@@ -119,6 +99,8 @@ public class AudioManager : MonoBehaviour
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         s.source.Play();
+        currentAudio = s.source;
+
     }
 
    

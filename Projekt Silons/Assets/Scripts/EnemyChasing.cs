@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEngine.SceneManagement;
 
 public class EnemyChasing : StateMachineBehaviour
 {
@@ -14,6 +15,7 @@ public class EnemyChasing : StateMachineBehaviour
     AIPath aIPath;
     AudioSource audioToPlay;
     GameObject[] enemies;
+    private bool coinsRemoved = false;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -25,13 +27,22 @@ public class EnemyChasing : StateMachineBehaviour
         enemyManager = FindObjectOfType<EnemyManager>();
         aIPath = animator.GetComponent<AIPath>();
 
+        //Playing Audio
         audioToPlay = enemy.enemyAudioSources[0];
         audioToPlay.Play();
         audioToPlay = enemy.enemyAudioSources[3];
         audioToPlay.Play();
 
+        //Unstoping
         aiDestinationSetter.target = player.transform;
         aIPath.maxSpeed = enemy.moveSpeed;
+
+        //Removing Score
+        if (!coinsRemoved)
+        {
+            ScoreManager.instace.RemoveAlarmedPoints();
+            coinsRemoved = true;
+        }
 
     }
 
@@ -54,6 +65,13 @@ public class EnemyChasing : StateMachineBehaviour
         else
         {
             enemy.detectionValue = enemyManager.chasingValue + 2f;
+            if (player.GetComponent<Player>().behindCover)
+            {
+                if (Vector2.Distance(player.GetComponent<Player>().coverImIn.position, animator.transform.position) < 2f)
+                {
+                    SceneManager.LoadScene(2);
+                }
+            }
         }
 
         enemies = GameObject.FindGameObjectsWithTag("Enemy");

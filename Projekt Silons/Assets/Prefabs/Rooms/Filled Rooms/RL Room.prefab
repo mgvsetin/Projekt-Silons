@@ -1288,7 +1288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf258a5af38566848ba1b394d263f5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 4
+  viewRadius: 6.5
   viewAngle: 90
   targetMask:
     serializedVersion: 2
@@ -2382,7 +2382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf258a5af38566848ba1b394d263f5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 4
+  viewRadius: 6.5
   viewAngle: 90
   targetMask:
     serializedVersion: 2
@@ -5031,7 +5031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf258a5af38566848ba1b394d263f5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 4
+  viewRadius: 6.5
   viewAngle: 90
   targetMask:
     serializedVersion: 2
@@ -7583,7 +7583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf258a5af38566848ba1b394d263f5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 4
+  viewRadius: 6.5
   viewAngle: 90
   targetMask:
     serializedVersion: 2

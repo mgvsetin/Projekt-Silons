@@ -43,36 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828008b1e15e9b64b822bb145dfe9b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointsBRoom:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsLRoom:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRRoom:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRBRoom:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRLRoom: []
-  waypointsTRoom: []
-  waypointsTBRoom: []
-  waypointsTLRoom: []
-  waypointsTRRoom: []
+  roomWaypoints: []

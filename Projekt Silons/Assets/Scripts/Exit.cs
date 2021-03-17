@@ -9,6 +9,7 @@ public class Exit : MonoBehaviour
     {
         if(collider.tag == "Player")
         {
+            ScoreManager.instace.AddPoints();
             SceneManager.LoadScene(1);
         }
     }

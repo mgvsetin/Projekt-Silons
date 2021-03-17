@@ -62,7 +62,7 @@ MonoBehaviour:
     maxDistance: 15
     rolloffMode: 1
     source: {fileID: 0}
-  - name: What was that
+  - name: Co to bylo 2
     clip: {fileID: 8300000, guid: d82a3a0765fa57347ae2e765a0f84f4c, type: 3}
     volume: 0.4
     pitch: 1
@@ -73,8 +73,19 @@ MonoBehaviour:
     maxDistance: 15
     rolloffMode: 1
     source: {fileID: 0}
-  - name: Somewhere
+  - name: "N\u011Bkde jsi tady"
     clip: {fileID: 8300000, guid: 057c6641fd5ebe84eaacb3dfb741e105, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    spatialBlend: 1
+    minDistance: 0.1
+    maxDistance: 15
+    rolloffMode: 1
+    source: {fileID: 0}
+  - name: Je tady
+    clip: {fileID: 8300000, guid: 0c09899b50865ec4fb21851b8b5fb659, type: 3}
     volume: 0.4
     pitch: 1
     loop: 0

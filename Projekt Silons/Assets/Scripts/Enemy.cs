@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
@@ -113,20 +114,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void GetPlayerOutOfCover(GameObject closestCover)
+    public void GetPlayerOutOfCover(GameObject cover)
     {
-        if (waitTime <= 0)
+        if (player.behindCover)
         {
-            if (player.behindCover && Vector2.Distance(transform.position, closestCover.transform.position) < 3f)
+            if(Vector2.Distance(transform.position, cover.transform.position) < 2f)
             {
-                player.behindCover = false;
-                player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 0);
+                if (Vector2.Distance(player.coverImIn.position, cover.transform.position) < 2f)
+                {
+                    SceneManager.LoadScene(2);
+                }
             }
-            waitTime = startWaitTimeCover;
-        }
-        else
-        {
-            waitTime -= Time.deltaTime;
         }
     }
 
@@ -149,6 +147,18 @@ public class Enemy : MonoBehaviour
         {
             crossedRooms = true;
             crossedRoom = collider.gameObject;
+        }
+
+        if (collider.CompareTag("Player"))
+        {
+            if(chasing)
+            {
+                SceneManager.LoadScene(2);
+            }
+            else if(detectionValue < enemyManager.chasingValue + 1f)
+            {
+                detectionValue = enemyManager.chasingValue + 1f;
+            }
         }
         
     }
@@ -177,16 +187,6 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-
-       /* EnemySounds es = Array.Find(enemySounds, enemysound => enemysound.name == name);
-        if (!PauseMenu.isPaused)
-        {
-            es.source.Play();
-        }
-        else
-        {
-            es.source.Pause();
-        } */
     }
 
     public void StopEnemySound(string name)

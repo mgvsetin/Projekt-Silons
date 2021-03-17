@@ -11,6 +11,7 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
     AIPath aiPath;
     private AudioSource audioToPlay;
     private Enemy enemy;
+    private bool coinsRemoved = false;
 
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -22,8 +23,16 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
         animator.GetComponent<Enemy>().heardSound = false;
         animator.SetBool("continueInvestaigating", false);
 
+        //Playing Audio
         audioToPlay = enemy.enemyAudioSources[0];
         audioToPlay.Play();
+
+        //Removing Score
+        if (!coinsRemoved)
+        {
+            ScoreManager.instace.RemoveSuspiciousPoints();
+            coinsRemoved = true;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -43,8 +52,9 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
             if (closestCover != null)
             {
                 aiDestinationSetter.target = closestCover.transform;
-                if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1.5f)
+                if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 2f)
                 {
+                    enemy.GetPlayerOutOfCover(closestCover);
                     closestCover = null;
                     animator.SetBool("isInvestigating2", false);
                     animator.SetBool("isInvestigating1", false);

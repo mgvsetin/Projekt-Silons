@@ -17,10 +17,11 @@ public class Player : MonoBehaviour
     [SerializeField] float coverDistance;
     private float horInput;
     private float verInput;
-    [SerializeField] private bool crouched;
+    public bool crouched;
     public bool behindCover;
     private bool nearCover;
-    private Transform coverImIn;
+    public Transform coverImIn;
+    public bool canMove;
 
     public Animator anim;
 
@@ -46,7 +47,6 @@ public class Player : MonoBehaviour
                 speed = speed / 2;
                 crouched = true;
                 anim.SetBool("Crouched", true);
-                walkingSoundParticle.gameObject.SetActive(false);
             }
             else
             {
@@ -60,18 +60,40 @@ public class Player : MonoBehaviour
 
         if (rb.velocity.x >= 0.1f || rb.velocity.y >= 0.1f || rb.velocity.x <= -0.1f || rb.velocity.y <= -0.1f)
         {
+            walkingSoundParticle.gameObject.SetActive(true);
             if (!crouched)
             {
-                walkingSoundParticle.gameObject.SetActive(true);
-                walkingSoundParticle.startSize = 7f;
-                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 3f;
+                if (!Input.GetKey(KeyCode.LeftShift))
+                {
+                    walkingSoundParticle.startSize = 7f;
+                    walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 3f;
+                }
             }
         }
+
+        //Crouching Particles
+
+        if (crouched)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                walkingSoundParticle.startSize = 3f;
+                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 1.75f;
+            }
+            else
+            {
+                walkingSoundParticle.gameObject.SetActive(false);
+            }
+        }
+
+        //Stoping Particles when not moving
 
         if (rb.velocity.x == 0 && rb.velocity.y == 0)
         {
             walkingSoundParticle.gameObject.SetActive(false);
         }
+
+        //Cover System
 
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -125,17 +147,26 @@ public class Player : MonoBehaviour
         //Adding velocity for walking
         if (!behindCover)
         {
-            rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
+            if (canMove)
+            {
+                rb.velocity = new Vector2(horInput * speed * Time.deltaTime, verInput * speed * Time.deltaTime);
+            }
         }
 
         //Adding velocity for running 
         if (!behindCover && Input.GetKey(KeyCode.LeftShift))
         {
-            if(speed < maxSpeed)
+            if (canMove)
             {
-                rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
-                walkingSoundParticle.startSize = 12f;
-                walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 4.5f;
+                if (speed <= maxSpeed)
+                {
+                    rb.velocity += new Vector2(horInput * runningSpeed * Time.deltaTime, verInput * speed * Time.deltaTime);
+                    if (!crouched)
+                    {
+                        walkingSoundParticle.startSize = 12f;
+                        walkingSoundParticle.GetComponent<CircleCollider2D>().radius = 4.5f;
+                    }
+                }
             }
         }
 

@@ -1453,7 +1453,7 @@ GameObject:
   - component: {fileID: 4061789978766953746}
   - component: {fileID: 5776760057596443940}
   - component: {fileID: 4226055117845487910}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spawn Poit Right
   m_TagString: Room Spawn Point
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -2195,9 +2195,9 @@ GameObject:
   - component: {fileID: 6794397718721435609}
   - component: {fileID: 2551571068338847031}
   - component: {fileID: 5017363064286074012}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Destroyer
-  m_TagString: Room Spawn Point
+  m_TagString: Destroyer
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2368,7 +2368,7 @@ GameObject:
   - component: {fileID: 4523559435137951291}
   - component: {fileID: 5310834016866388326}
   - component: {fileID: 8494936673743311132}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spawn Poit Top
   m_TagString: Room Spawn Point
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -3191,7 +3191,7 @@ GameObject:
   - component: {fileID: 8268960910620766087}
   - component: {fileID: 5754316447687636147}
   - component: {fileID: 3865044487389658207}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spawn Poit Left
   m_TagString: Room Spawn Point
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -4092,7 +4092,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4669594544172354483}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spawn Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4130,7 +4130,7 @@ GameObject:
   - component: {fileID: 5873571279281479819}
   - component: {fileID: 8512521084487747492}
   - component: {fileID: 9137689406090127731}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spawn Poit Bottom
   m_TagString: Room Spawn Point
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -5212,7 +5212,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9011131978398579098}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 120, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

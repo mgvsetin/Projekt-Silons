@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4690303951355243228}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.3415626, z: 1}
   m_Children: []
@@ -43,24 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653e480158b8ce041b3060d65e129a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointsBCovers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsLCovers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRCovers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRBCovers:
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointsRLCovers: []
-  waypointsTCovers: []
-  waypointsTBCovers: []
-  waypointsTLCovers: []
-  waypointsTRCovers: []
+  startingRoomCovers: []
+  currentRoomCovers: []

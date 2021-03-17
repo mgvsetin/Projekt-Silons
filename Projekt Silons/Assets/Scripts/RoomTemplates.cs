@@ -16,10 +16,11 @@ public class RoomTemplates : MonoBehaviour
     public float waitTime;
     public bool exitSpawned;
     public GameObject exit;
+    private Player player;
 
     private void Start()
     {
-
+        player = FindObjectOfType<Player>();
     }
 
     private void Update()
@@ -29,6 +30,7 @@ public class RoomTemplates : MonoBehaviour
             Instantiate(exit, rooms[rooms.Count - 1].transform.position, Quaternion.identity);
             exitSpawned = true;
             AstarPath.active.Scan();
+            player.canMove = true;
         }
         else
         {

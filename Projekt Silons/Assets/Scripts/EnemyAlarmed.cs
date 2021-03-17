@@ -16,8 +16,10 @@ public class EnemyAlarmed : StateMachineBehaviour
     string roomName;
     CoverTemplates coverTemplates;
     public GameObject[] enemies;
+    public GameObject currentCover;
 
     public AudioSource audioToPlay;
+    private bool coinsRemoved = false;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -39,6 +41,13 @@ public class EnemyAlarmed : StateMachineBehaviour
         audioToPlay = enemy.enemyAudioSources[0];
         audioToPlay.Play();
 
+        //Removing Score
+        if (!coinsRemoved)
+        {
+            ScoreManager.instace.RemoveAlarmedPoints();
+            coinsRemoved = true;
+        }
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -57,6 +66,7 @@ public class EnemyAlarmed : StateMachineBehaviour
         else
         {
             SetTarget();
+            enemy.GetPlayerOutOfCover(currentCover);
         }
 
         if (enemy.crossedRooms)
@@ -127,7 +137,8 @@ public class EnemyAlarmed : StateMachineBehaviour
 
     public void SetTarget()
     {
-        aiDestinationSetter.target = covers[randomCover].transform;
+        currentCover = covers[randomCover];
+        aiDestinationSetter.target = currentCover.transform;
 
     }
 
