@@ -53,7 +53,7 @@ public class EnemyAlarmed : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        //Heard or saw player again, act like Investigating state, then come back to this state again
         if (enemy.heardSound)
         {
             animator.SetBool("isInvestigating1", true);
@@ -65,12 +65,14 @@ public class EnemyAlarmed : StateMachineBehaviour
         }
         else
         {
+            //Look in covers for player, if he's there game over
             SetTarget();
             enemy.GetPlayerOutOfCover(currentCover);
         }
 
         if (enemy.crossedRooms)
         {
+            //Setting enemy to patrol in new room if he crossed rooms
             covers = enemy.crossedRoom.GetComponent<CoverTemplates>().currentRoomCovers;
         }
 
@@ -85,10 +87,10 @@ public class EnemyAlarmed : StateMachineBehaviour
             }
         } 
        
-
+        //Choose random cover in room
         for (int i = 0; i < covers.Length; i++)
         {
-
+           
             if (Vector3.Distance(animator.transform.position, covers[randomCover].transform.position) < 2f)
             {
                 if (waitTime <= 0)
@@ -107,34 +109,9 @@ public class EnemyAlarmed : StateMachineBehaviour
             animator.GetComponent<Enemy>().DecreaseDetectionValue();
         }
 
-
-        GameObject[] SortCovers(GameObject[] unsortedCovers)
-        {
-            int min;
-            GameObject temp;
-
-            for (int i = 0; i < unsortedCovers.Length; i++)
-            {
-                min = i;
-                for (int j = i + 1; j < unsortedCovers.Length; j++)
-                {
-                    if (Vector2.Distance(animator.transform.position, unsortedCovers[j].transform.position) < Vector2.Distance(animator.transform.position, unsortedCovers[min].transform.position))
-                    {
-                        min = j;
-                    }
-                }
-
-                if (min != i)
-                {
-                    temp = unsortedCovers[i];
-                    unsortedCovers[i] = unsortedCovers[min];
-                    unsortedCovers[min] = temp;
-                }
-            }
-            return unsortedCovers;
-        }
     }
 
+    //Seting destination in A*
     public void SetTarget()
     {
         currentCover = covers[randomCover];

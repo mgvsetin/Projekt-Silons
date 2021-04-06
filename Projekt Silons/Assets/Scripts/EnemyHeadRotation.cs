@@ -15,6 +15,7 @@ public class EnemyHeadRotation : MonoBehaviour
     }
     void Update()
     {
+        //Rotating enemy
         rotationDir = -(enemy.aiDestinationSetter.target.position - transform.position).normalized;
         var angle = Mathf.Atan2(rotationDir.y, rotationDir.x) * Mathf.Rad2Deg;
         lookingDir = Quaternion.AngleAxis(angle, Vector3.forward);

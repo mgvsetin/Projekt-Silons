@@ -43,6 +43,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
+    //Calculating direction of angle
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
         if (!angleIsGlobal)
@@ -55,6 +56,7 @@ public class FieldOfView : MonoBehaviour
     public void FindVisableTargets()
     {
         visibleTargets.Clear();
+        //Getting targets in radius
         Collider2D[] targetsInView = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask);
 
         for (int i = 0; i < targetsInView.Length; i++)
@@ -62,10 +64,12 @@ public class FieldOfView : MonoBehaviour
             Transform target = targetsInView[i].transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
+            //Cheking if player is new FOV
             if (Vector3.Angle(-transform.right, dirToTarget) < viewAngle / 2)
             {
                 float distToTarget = Vector3.Distance(transform.position, target.position);
 
+                //Cheking if theres no obstacle between player and enemy
                 if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
@@ -76,10 +80,12 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
+        //Player is visible
         if (visibleTargets.Count > 0)
         {
             enemy.playerVisible = true;
         }
+        //Player is not visible
         else
         {
             enemy.playerVisible = false;
@@ -89,24 +95,26 @@ public class FieldOfView : MonoBehaviour
 
     private void DrawFieldOfView()
     {
-        int rayCount = Mathf.RoundToInt(viewAngle * meshResolution);
-        float rayAngleSize = viewAngle / rayCount;
+        int rayCount = Mathf.RoundToInt(viewAngle * meshResolution); //Number of rays in FOV
+        float rayAngleSize = viewAngle / rayCount; //Angle between each ray
         List<Vector3> viewPoints = new List<Vector3>();
 
         for (int i = 0; i <= rayCount; i++)
         {
-            float angle = transform.eulerAngles.z - viewAngle /2 + rayAngleSize * i;
-            Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * viewRadius, Color.red);
-            ViewCastInfo newViewCast = ViewCast(angle);
-            viewPoints.Add(newViewCast.point);
+            float angle = transform.eulerAngles.z - viewAngle /2 + rayAngleSize * i; //Getting angle of each ray fired from enemy
+            ViewCastInfo newViewCast = ViewCast(angle);  //Methode for checking if ray hit obstacle
+            viewPoints.Add(newViewCast.point); //Add point from methode above
         }
 
-        int vertexCount = viewPoints.Count + 1;
-        Vector3[] vertices = new Vector3[vertexCount];
-        int[] triangles = new int[(vertexCount - 2) * 3];
+        //Drawing Mesh from end points of rays
+
+        int vertexCount = viewPoints.Count + 1; //number of end points of rays
+        Vector3[] vertices = new Vector3[vertexCount]; //end points of rays
+        int[] triangles = new int[(vertexCount - 2) * 3]; //triangles made from endpoints
 
         vertices[0] = Vector3.zero;
 
+        //Making triangles from endpoints
         for(int i = 0; i < vertexCount - 1; i++)
         {
             vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
@@ -119,27 +127,29 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
+        //Setting Mesh
         viewMesh.Clear();
         viewMesh.vertices = vertices;
         viewMesh.triangles = triangles;
         viewMesh.RecalculateNormals();
     }
 
-    ViewCastInfo ViewCast(float globalAngle)
+    ViewCastInfo ViewCast(float globalAngle) //Methode for checking if ray hit obstacle and adding end points of rays
     {
         Vector3 dir = DirFromAngle(globalAngle, true);
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, dir, out hit, viewRadius, obstacleMask))
+        if (Physics.Raycast(transform.position, dir, out hit, viewRadius, obstacleMask)) //hit obstacle
         {
-            return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
+            return new ViewCastInfo(true, hit.point, hit.distance, globalAngle); //end point of ray is where ray hit obstacle
         }
-        else
+        else //didnt hit
         {
-            return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle); //end point of ray is on the viewRadius
         }
     }
 
+    //ViewCastInfo is a struct, struct is a custom datatype that can hold more then one data type
     public struct ViewCastInfo
     {
         public bool hit;

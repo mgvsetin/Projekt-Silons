@@ -49,8 +49,10 @@ public class EnemyChasing : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        //A* destination is player pos
         aiDestinationSetter.target = player.transform;
 
+        //Enemy lost player
         if (Vector2.Distance(animator.transform.position, player.transform.position) >= enemyManager.chasingRadius)
          {
             enemy.heardSound = false;
@@ -62,6 +64,8 @@ public class EnemyChasing : StateMachineBehaviour
                 animator.SetBool("isChasing", false);
             }
          }
+
+        //Enemy still following player
         else
         {
             enemy.detectionValue = enemyManager.chasingValue + 2f;
@@ -74,6 +78,7 @@ public class EnemyChasing : StateMachineBehaviour
             }
         }
 
+        //Telling other enemies
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
         {

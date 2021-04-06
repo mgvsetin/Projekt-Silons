@@ -37,6 +37,7 @@ public class EnemyStopBeforeInvastigating : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        //Timer
         if(waitTime <= 0)
         {
             animator.SetBool("continueInvestaigating", true);
@@ -44,6 +45,7 @@ public class EnemyStopBeforeInvastigating : StateMachineBehaviour
         }
         else
         {
+            //Stopping player
             aiPath.maxSpeed = 0;
             waitTime -= Time.deltaTime;
         }

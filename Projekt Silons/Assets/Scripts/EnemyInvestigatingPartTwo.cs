@@ -42,6 +42,7 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
             SortCovers(covers);
             closestCover = null;
 
+            //Assigning closest cover
             for (int i = 0; i < covers.Length; i++)
             {
                 if (closestCover == null)
@@ -49,6 +50,8 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
                     closestCover = covers[i];
                 }
             }
+
+            //Setting destination for cover and cheching if player is not hiding there
             if (closestCover != null)
             {
                 aiDestinationSetter.target = closestCover.transform;
@@ -61,8 +64,11 @@ public class EnemyInvestigatingPartTwo : StateMachineBehaviour
                 }
             }
 
+        //Decreasing detection value
         animator.GetComponent<Enemy>().DecreaseDetectionValue();
 
+
+        //Using selection sort for sorting covers
         GameObject[] SortCovers(GameObject[] unsortedCovers)
         {
             int min;

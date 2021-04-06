@@ -36,15 +36,18 @@ public class EnemyInvestigatingPartOne : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         aiPath.maxSpeed = moveSpeed;
+        //Setting A* destinatinon to newest last heard position waypoint
         if (enemy.heardSound == true)
         {
             aiDestinationSetter.target = enemy.lastHeardPosWaypoits[enemy.lastHeardPosWaypoits.Count - 1].transform;
         }
+        //Setting A* destinatinon to newest last heard seen waypoint
         else
         {
             aiDestinationSetter.target = fov.lastSeenPosWaypoits[fov.lastSeenPosWaypoits.Count - 1].transform;
         }
 
+        //Enemy came to its destination
         if (Vector2.Distance(animator.transform.position, aiDestinationSetter.target.position) <= 1f)
         {
             animator.SetBool("isInvestigating2", true);

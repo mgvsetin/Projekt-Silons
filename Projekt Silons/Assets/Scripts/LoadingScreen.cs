@@ -16,6 +16,7 @@ public class LoadingScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Disable after level loaded
         if (rooms.exitSpawned)
         {
             transform.GetComponent<Animator>().SetBool("Loaded", true);
